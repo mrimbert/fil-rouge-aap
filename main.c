@@ -26,18 +26,18 @@
         int main(){
         morpion M = newMorpion();
         int move;
-        int currentPlayer = 0;  // 0 for player 1, 1 for player 2
+        int currentPlayer = 0;  
 
-        while(!isWin(M)){  // Check if the game is over
-        printMorpion(M);  // Display the current state of the game
+        while(!isWin(M)){  
+        printMorpion(M);  
         printf("Player %d's turn. Enter your move (0-8): ", currentPlayer + 1);
         scanf("%d", &move);
-        playMorpion(&M, move);  // Update the game state with the new move
-        generateMorpionImage(M);  // Generate an image of the current game state
+        playMorpion(&M, move); 
+        generateMorpionImage(M);  
         currentPlayer = 1 - currentPlayer;  // Switch player
     }
 
-        printMorpion(M);  // Display the final state of the game
+        printMorpion(M)
         printf("Game over!\n");
 
     return 0;
