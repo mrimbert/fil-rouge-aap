@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include "morpion.h"
+static int fileCounter = 0;
 
 morpion newMorpion(){
 	morpion M = {{-1,-1,-1,-1,-1,-1,-1,-1,-1}, ROND};
@@ -10,7 +12,7 @@ morpion newMorpion(){
 
 void printMorpion(morpion M){
 	int i;
-	printf("- - - \n");
+	printf("- - - - -  \n");
 	
 	for(i = 0; i<9;i++){
 		if(M.g[i]==ROND){
@@ -26,11 +28,11 @@ void printMorpion(morpion M){
 			printf("\n");
 		}
 	}
-	printf("- - - \n");
+	printf("- - - - -  \n");
 }
 
 void playMorpion(morpion * M, int pos){
-	assert(pos < 8 && pos >= 0);
+	assert(pos <= 8 && pos >= 0);
 	
 	if(M->g[pos] == ROND || M->g[pos] == CROIX){ //On vérifie que la position n'a pas déjà été jouée
 		printf("Position déjà jouée, merci de rejouer \n");
@@ -104,16 +106,22 @@ int isWin(morpion M){
 	return 0;
 }
 
-void generateMorpionImage(const morpion M) {
-    int i;
-    FILE *file = fopen("morpion", "w");
 
+/*void generateMorpionImage(const morpion M) {
+    int i;
+    char fileName[30], pngFileName[30], command[100];
+
+    // Créer un nom de fichier unique pour le fichier DOT et le fichier PNG
+    snprintf(fileName, sizeof(fileName), "morpion%d.dot", fileCounter);
+    snprintf(pngFileName, sizeof(pngFileName), "morpion%d.png", fileCounter);
+
+    FILE *file = fopen(fileName, "w");
     if (file == NULL) {
-        printf("Erreur : Impossible d'ouvrir le fichier morpion.\n");
+        printf("Erreur : Impossible d'ouvrir le fichier %s.\n", fileName);
         return;
     }
 
-    // Écriture du contenu DOT représentant le morpion dans le fichier
+     // Écriture du contenu DOT représentant le morpion dans le fichier
     fprintf(file, "digraph {\n");
     fprintf(file, " a0 [shape=none label=<\n");
     fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" style=\"rounded\" bgcolor=\"black\"> \n");
@@ -139,10 +147,62 @@ void generateMorpionImage(const morpion M) {
     fprintf(file,">]; \n");
     fprintf(file, "}\n");
     fclose(file);
-    
-    char command[100];
-    snprintf(command, sizeof(command), "dot morpion -Tpng -o morpion.png");
-
+    snprintf(command, sizeof(command), "dot %s -Tpng -o morpion%d.png",fileName, fileCounter);
     system(command);
-}
 
+    fileCounter++;  // Incrémenter le compteur pour la prochaine image
+}*/
+
+void generateMorpionImage(const morpion M) {
+    static char previousFileName[30] = "";
+    char fileName[30], pngFileName[30], command[200];
+
+
+    if (previousFileName[0] != '\0') {
+        snprintf(command, sizeof(command), "rm %s", previousFileName);
+        system(command);
+    }
+
+
+    snprintf(fileName, sizeof(fileName), "morpion%d.dot", fileCounter);
+    snprintf(pngFileName, sizeof(pngFileName), "morpion%d.png", fileCounter);
+
+    FILE *file = fopen(fileName, "w");
+    if (file == NULL) {
+        printf("Erreur : Impossible d'ouvrir le fichier %s.\n", fileName);
+        return;
+    }
+
+    fprintf(file, "digraph {\n");
+    fprintf(file, " a0 [shape=none label=<\n");
+    fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" style=\"rounded\" bgcolor=\"black\"> \n");
+    fprintf(file, "<TR> \n");
+    for (i = 0; i<9; i++){
+	if(M.g[i]==ROND){
+			fprintf(file, "<TD bgcolor=\"white\">O</TD> \n");
+	}
+	if(M.g[i] == CROIX){
+			fprintf(file, "<TD bgcolor=\"white\">X</TD> \n");
+	}
+	if(M.g[i] == -1){
+			fprintf(file, "<TD bgcolor=\"white\">.</TD> \n");
+	}
+	if(i%3==2){
+			fprintf(file, "</TR> \n");
+			fprintf(file, "<TR> \n");
+	}
+    }
+    
+    fprintf(file, "<TD bgcolor=\"red\" colspan=\"3\">label</TD></TR> \n");
+    fprintf(file, "</TABLE> \n");
+    fprintf(file,">]; \n");
+    fprintf(file, "}\n");
+    fclose(file);
+
+    snprintf(command, sizeof(command), "dot %s -Tpng -o %s && rm %s", fileName, pngFileName, fileName);
+    system(command);
+
+    strncpy(previousFileName, fileName, sizeof(previousFileName));
+
+    fileCounter++; 
+}
