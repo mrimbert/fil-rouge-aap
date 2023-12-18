@@ -1,1 +1,1 @@
-main.c morpion.c
+main.c ./utils/morpion.c ./utils/super_morpion.c
