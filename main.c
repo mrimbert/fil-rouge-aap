@@ -3,6 +3,7 @@
 
 //int main(int argc, char ** argv){
 	//super_morpion sm = newSuperMorpion();
+	//generateSuperMorpionImage(sm);
 
 	/*
 	grille test = {CROIX, CROIX, CROIX, ROND, ROND, ROND, ROND, CROIX, CROIX};
