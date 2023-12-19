@@ -8,5 +8,6 @@ super_morpion newSuperMorpion(); //Fonction qui initialise un super morpion
 //super_morpion toSuperMorpion(char * play); //Fonction qui prend en argument une chaîne FEN représentant un super morpion et renvoie l'état du super morpion correspondant
 //void printSuperMorpion(super_morpion sm); //Fonction qui affiche dans la console un super morpion
 void generateSuperMorpionImage(super_morpion sm); //Fonction qui affiche graphiquement une position de super morpion
+void playSuperMorpion(super_morpion * sm, int pos); //Fonction qui permet de jouer un coup de super morpion à la position pos
 
 

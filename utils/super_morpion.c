@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "super_morpion.h"
 static int fileCounter = 0;
 
@@ -8,6 +9,24 @@ super_morpion newSuperMorpion(){
 	return sm;
 }
 
+void playSuperMorpion(super_morpion * sm, int pos){
+	assert(pos <= 88 && pos >= 0);
+	int i = (pos/10); //Numéro du cadran
+	int j = (pos%10); //Position dans le cadran
+	
+	if(sm->g[i][j] == ROND || sm->g[i][j] == CROIX){ //On vérifie que la position n'a pas déjà été jouée
+		printf("Position déjà jouée, merci de rejouer \n");
+		return;
+	}
+	
+	sm->g[i][j] = sm->trait;
+	if(sm->trait == ROND){
+		sm->trait = CROIX;
+	}
+	else{
+		sm->trait = ROND;
+	}
+}
 
 
 void generateSuperMorpionImage(super_morpion sm){
