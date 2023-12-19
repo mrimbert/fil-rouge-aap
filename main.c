@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include "./utils/super_morpion.h"
 
-//int main(int argc, char ** argv){
-	//super_morpion sm = newSuperMorpion();
-	//generateSuperMorpionImage(sm);
-
+// int main(int argc, char ** argv){
+/*
+	super_morpion sm = newSuperMorpion();
+	generateSuperMorpionImage(sm);
+	playSuperMorpion(&sm,84);
+	generateSuperMorpionImage(sm);
+*/
 	/*
 	grille test = {CROIX, CROIX, CROIX, ROND, ROND, ROND, ROND, CROIX, CROIX};
 	morpion test2;
