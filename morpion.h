@@ -8,10 +8,10 @@ typedef struct {
 	int trait;
 } morpion;
 
-typedef struct{
+/*typedef struct{
 	grille g[9];
 	int trait;
-} super_morpion;
+} super_morpion;*/
 
 morpion newMorpion(); //Fonction qui initialise une grille de morpion
 void printMorpion(morpion M); //Fonction qui affiche dans la console l'état du morpion
