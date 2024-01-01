@@ -132,7 +132,7 @@ void generateSuperMorpionImage(super_morpion sm) {
 
 int isWinSuperMorpion(super_morpion *sm) {
     morpion tempGrille;
-    //Vérification des victoires pour chaque ligne
+  
     for (int i = 0; i < 3; i++) {
         memcpy(tempGrille.g, sm->g[i * 3], sizeof(tempGrille.g));
         tempGrille.trait = sm->trait;
@@ -149,8 +149,6 @@ int isWinSuperMorpion(super_morpion *sm) {
         }
     }
 
-    // Ajoutez ici des vérifications supplémentaires pour les colonnes et les diagonales
-    // Vérification des victoires pour chaque colonne
     for (int i = 0; i < 3; i++) {
         memcpy(tempGrille.g, sm->g[i], sizeof(tempGrille.g));
         tempGrille.trait = sm->trait;
@@ -167,7 +165,6 @@ int isWinSuperMorpion(super_morpion *sm) {
         }
     }
 
-    // Vérification des victoires pour les diagonales
     memcpy(tempGrille.g, sm->g[0], sizeof(tempGrille.g));
     tempGrille.trait = sm->trait;
     int diagWin1 = isWin(tempGrille);
