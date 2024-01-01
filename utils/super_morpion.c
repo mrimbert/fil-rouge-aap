@@ -130,67 +130,69 @@ void generateSuperMorpionImage(super_morpion sm) {
   fileCounter++; // Incrémenter le compteur pour la prochaine image
 }
 
-int isWinSuperMorpion(super_morpion sm) {
-  morpion grille0 = newMorpion();
-  grille0.trait = sm.trait;
-  memcpy(grille0.g, sm.g[0], 9);
+int isWinSuperMorpion(super_morpion *sm) {
+    morpion tempGrille;
+    //Vérification des victoires pour chaque ligne
+    for (int i = 0; i < 3; i++) {
+        memcpy(tempGrille.g, sm->g[i * 3], sizeof(tempGrille.g));
+        tempGrille.trait = sm->trait;
+        int win1 = isWin(tempGrille);
 
-  morpion grille1 = newMorpion();
-  grille1.trait = sm.trait;
-  memcpy(grille1.g, sm.g[1], 9);
+        memcpy(tempGrille.g, sm->g[i * 3 + 1], sizeof(tempGrille.g));
+        int win2 = isWin(tempGrille);
 
-  morpion grille2 = newMorpion();
-  grille2.trait = sm.trait;
-  memcpy(grille2.g, sm.g[2], 9);
+        memcpy(tempGrille.g, sm->g[i * 3 + 2], sizeof(tempGrille.g));
+        int win3 = isWin(tempGrille);
 
-  morpion grille3 = newMorpion();
-  grille3.trait = sm.trait;
-  memcpy(grille3.g, sm.g[3], 9);
+        if (abs(win1) == 1 && abs(win2) == 1 && abs(win3) == 1) {
+            return sm->trait + 1;
+        }
+    }
 
-  morpion grille4 = newMorpion();
-  grille4.trait = sm.trait;
-  memcpy(grille4.g, sm.g[4], 9);
+    // Ajoutez ici des vérifications supplémentaires pour les colonnes et les diagonales
+    // Vérification des victoires pour chaque colonne
+    for (int i = 0; i < 3; i++) {
+        memcpy(tempGrille.g, sm->g[i], sizeof(tempGrille.g));
+        tempGrille.trait = sm->trait;
+        int win1 = isWin(tempGrille);
 
-  morpion grille5 = newMorpion();
-  grille5.trait = sm.trait;
-  memcpy(grille5.g, sm.g[5], 9);
+        memcpy(tempGrille.g, sm->g[i + 3], sizeof(tempGrille.g));
+        int win2 = isWin(tempGrille);
 
-  morpion grille6 = newMorpion();
-  grille6.trait = sm.trait;
-  memcpy(grille6.g, sm.g[6], 9);
+        memcpy(tempGrille.g, sm->g[i + 6], sizeof(tempGrille.g));
+        int win3 = isWin(tempGrille);
 
-  morpion grille7 = newMorpion();
-  grille7.trait = sm.trait;
-  memcpy(grille7.g, sm.g[7], 9);
+        if (abs(win1) == 1 && abs(win2) == 1 && abs(win3) == 1) {
+            return sm->trait + 1;
+        }
+    }
 
-  morpion grille8 = newMorpion();
-  grille8.trait = sm.trait;
-  memcpy(grille8.g, sm.g[8], 9);
+    // Vérification des victoires pour les diagonales
+    memcpy(tempGrille.g, sm->g[0], sizeof(tempGrille.g));
+    tempGrille.trait = sm->trait;
+    int diagWin1 = isWin(tempGrille);
 
-  if (abs(isWin(grille0)) == 1 && abs(isWin(grille1)) == 1 &&
-      abs(isWin(grille2)) == 1)
-    return sm.trait * -1;
-  if (abs(isWin(grille3)) == 1 && abs(isWin(grille4)) == 1 &&
-      abs(isWin(grille5)) == 1)
-    return sm.trait * -1;
-  if (abs(isWin(grille6)) == 1 && abs(isWin(grille7)) == 1 &&
-      abs(isWin(grille8)) == 1)
-    return sm.trait * -1;
-  if (abs(isWin(grille0)) == 1 && abs(isWin(grille3)) == 1 &&
-      abs(isWin(grille6)) == 1)
-    return sm.trait * -1;
-  if (abs(isWin(grille1)) == 1 && abs(isWin(grille4)) == 1 &&
-      abs(isWin(grille7)) == 1)
-    return sm.trait * -1;
-  if (abs(isWin(grille2)) == 1 && abs(isWin(grille5)) == 1 &&
-      abs(isWin(grille8)) == 1)
-    return sm.trait * -1;
-  if (abs(isWin(grille0)) == 1 && abs(isWin(grille4)) == 1 &&
-      abs(isWin(grille8)) == 1)
-    return sm.trait * -1;
-  if (abs(isWin(grille2)) == 1 && abs(isWin(grille4)) == 1 &&
-      abs(isWin(grille6)) == 1)
-    return sm.trait * -1;
+    memcpy(tempGrille.g, sm->g[4], sizeof(tempGrille.g));
+    int diagWin2 = isWin(tempGrille);
 
-  return 0;
+    memcpy(tempGrille.g, sm->g[8], sizeof(tempGrille.g));
+    int diagWin3 = isWin(tempGrille);
+
+    if (abs(diagWin1) == 1 && abs(diagWin2) == 1 && abs(diagWin3) == 1) {
+        return sm->trait + 1;
+    }
+
+    memcpy(tempGrille.g, sm->g[2], sizeof(tempGrille.g));
+    int diagWin4 = isWin(tempGrille);
+
+    memcpy(tempGrille.g, sm->g[4], sizeof(tempGrille.g));  // Déjà copié, mais pour la clarté
+    int diagWin5 = isWin(tempGrille);
+
+    memcpy(tempGrille.g, sm->g[6], sizeof(tempGrille.g));
+    int diagWin6 = isWin(tempGrille);
+
+    if (abs(diagWin4) == 1 && abs(diagWin5) == 1 && abs(diagWin6) == 1) {
+        return sm->trait + 1;
+    }
+    return 0;
 }
