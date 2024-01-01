@@ -184,4 +184,14 @@ void generateMorpionImage(const morpion M) {
     fileCounter++;  // Incrémenter le compteur pour la prochaine image
 }
 
+int max(int a, int b){
+	if(a>= b) return a;
+	return b; 
+}
+
+int min(int a, int b){
+	if(a>= b) return b;
+	return a; 
+}
+
 

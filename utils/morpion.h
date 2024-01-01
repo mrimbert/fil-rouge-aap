@@ -16,4 +16,5 @@ void playMorpion(morpion * M, int pos); //Fonction qui permet de jouer un coup d
 int isWin(morpion M); //Fonction qui permet de déterminer si l'un des joueurs à gagner, renvoie 1 si le joueur CROIX gagne, 0 si personne ne gagne, -1 si le joueur ROND gagne
 void generateMorpionImage(const morpion M); //Fonction qui permet de générer une image représentant une position de morpion
 
-//void printSuperMorpion(super_morpion S);
+int max(int a, int b); //Fonction mathématique max usuel
+int min(int a, int b); //Fonction mathématique min usuel
