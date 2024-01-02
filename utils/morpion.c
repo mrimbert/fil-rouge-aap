@@ -4,6 +4,7 @@
 #include <string.h>
 #include "morpion.h"
 static int fileCounter = 0;
+static int morpionCounter = 0;
 
 morpion newMorpion(){
 	morpion M = {{-1,-1,-1,-1,-1,-1,-1,-1,-1}, ROND};
@@ -62,7 +63,7 @@ morpion toMorpion(char * play){
 			M.g[i+decalage] = ROND;
 			//printf("Position %d \n", i+decalage);
 		}
-		printf("On a : %c\n", play[i]);
+		//printf("On a : %c\n", play[i]);
 		if(play[i] <= 56) {
 			decalage += play[i]-49;
 			//printf("Decalage = %d \n", decalage);
@@ -184,6 +185,52 @@ void generateMorpionImage(const morpion M) {
     fileCounter++;  // Incrémenter le compteur pour la prochaine image
 }
 
+int generateGrilleImage(const morpion M, int state){
+    int i;
+    
+     // Écriture du contenu DOT représentant le morpion sur la sortie standard (donc la console)
+    printf(" m%d [shape=none label=<\n", morpionCounter);
+    printf("<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" style=\"rounded\" bgcolor=\"black\"> \n");
+    printf("<TR> \n");
+    for (i = 0; i<9; i++){
+	if(M.g[i]==ROND){
+			printf("<TD bgcolor=\"white\">O</TD> \n");
+	}
+	if(M.g[i] == CROIX){
+			printf("<TD bgcolor=\"white\">X</TD> \n");
+	}
+	if(M.g[i] == -1){
+			printf("<TD bgcolor=\"white\">.</TD> \n");
+	}
+	if(i%3==2){
+			printf("</TR> \n");
+			printf("<TR> \n");
+	}
+    }
+    
+    if (state==1){
+    	    printf("<TD bgcolor=\"red\" colspan=\"3\">m_%d</TD></TR> \n", morpionCounter);
+    }
+    if (state == 0){
+    	   printf("<TD bgcolor=\"green\" colspan=\"3\">m_%d</TD></TR> \n", morpionCounter);
+    }
+    printf("</TABLE> \n");
+    printf(">]; \n");
+    int prev = morpionCounter;
+    morpionCounter++;
+    
+    return prev;
+}
+
+void generateLinkMorpion(int num_mere, int num_fille){
+	printf("m%d -> m%d[label=\"Coup\"] \n", num_mere, num_fille);
+}
+
+void valeurMorpion(int num, int val){
+	printf("m%d[xlabel=%d] \n", num, val);
+}
+
+
 int max(int a, int b){
 	if(a>= b) return a;
 	return b; 
@@ -192,6 +239,10 @@ int max(int a, int b){
 int min(int a, int b){
 	if(a>= b) return b;
 	return a; 
+}
+
+int getCounter(){
+	return morpionCounter;
 }
 
 
