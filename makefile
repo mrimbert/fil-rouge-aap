@@ -10,11 +10,6 @@ CFLAGS=-Wall -Wno-format-overflow -Wno-format-truncation
 all: $(CIBLE) tttree
 	@echo "Le programme $(CIBLE) a été produit dans le répertoire $(REP)"
 
-$(CIBLE) : $(SOURCES)
-	@echo -n "Production de $(CIBLE)"
-	@echo " à partir des fichiers : $(SOURCES)"
-	gcc $(CFLAGS) $(SOURCES) -o $@
-
 clean: 
 	@echo "Nettoyage de $(CIBLE)"
 	@rm -rf $(CIBLE)
@@ -22,4 +17,4 @@ clean:
 tttree: tttree.c ./utils/morpion.c
 	@echo "Le programme tttree.exe a été produit"
 	gcc $(CFLAGS) tttree.c ./utils/morpion.c -o tttree.exe
-	
+
