@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 static int fileCounter = 0;
 int cadranprev = -1;
 
@@ -18,6 +19,15 @@ super_morpion newSuperMorpion() {
                        {-1, -1, -1, -1, -1, -1, -1, -1, -1}},
                       ROND};
   return sm;
+}
+
+int includesZero(morpion M) {
+    for (int i = 0; i < 9; i++) {
+        if (M.g[i] == -1) {  
+            return 1; 
+        }
+    }
+    return 0;
 }
 
 void playSuperMorpion(super_morpion *sm, int pos) {
@@ -59,7 +69,7 @@ void playSuperMorpion(super_morpion *sm, int pos) {
   printf("Le prochain coup devra être jouée dans le cadran %d \n", cadranprev);
 }
 
-void generateSuperMorpionImage(super_morpion sm) {
+/*void generateSuperMorpionImage(super_morpion sm) {
   int i;
   int j;
   char fileName[30], pngFileName[30], command[100];
@@ -128,11 +138,11 @@ void generateSuperMorpionImage(super_morpion sm) {
   system(command);
 
   fileCounter++; // Incrémenter le compteur pour la prochaine image
-}
+}*/
 
 int isWinSuperMorpion(super_morpion *sm) {
     morpion tempGrille;
-    //Vérification des victoires pour chaque ligne
+  
     for (int i = 0; i < 3; i++) {
         memcpy(tempGrille.g, sm->g[i * 3], sizeof(tempGrille.g));
         tempGrille.trait = sm->trait;
@@ -149,8 +159,6 @@ int isWinSuperMorpion(super_morpion *sm) {
         }
     }
 
-    // Ajoutez ici des vérifications supplémentaires pour les colonnes et les diagonales
-    // Vérification des victoires pour chaque colonne
     for (int i = 0; i < 3; i++) {
         memcpy(tempGrille.g, sm->g[i], sizeof(tempGrille.g));
         tempGrille.trait = sm->trait;
@@ -167,7 +175,6 @@ int isWinSuperMorpion(super_morpion *sm) {
         }
     }
 
-    // Vérification des victoires pour les diagonales
     memcpy(tempGrille.g, sm->g[0], sizeof(tempGrille.g));
     tempGrille.trait = sm->trait;
     int diagWin1 = isWin(tempGrille);
@@ -196,3 +203,152 @@ int isWinSuperMorpion(super_morpion *sm) {
     }
     return 0;
 }
+
+int evaluation_grille(morpion m) {
+ int evaluation = 0;
+    float points[] = {0.3, 0.2, 0.3, 0.2, 0.4, 0.2, 0.3, 0.2, 0.3};
+    for(int i = 0; i < 9; i++) {
+        if(m.g[i] == -1) {
+        evaluation = evaluation + 0;
+        if(m.g[i] == ROND) {
+        evaluation = evaluation -  points[i];
+        }
+        if(m.g[i] == CROIX) { 
+        evaluation = evaluation + points[i];
+        }
+    }
+    }
+    int a = -1;
+    if((m.g[0] + m.g[1] + m.g[2] == a) || (m.g[3] + m.g[4] + m.g[5] == a) || (m.g[6] + m.g[7] + m.g[8] == a) ||
+       (m.g[0] + m.g[3] + m.g[6] == a) || (m.g[1] + m.g[4] + m.g[7] == a) || (m.g[2] + m.g[5] + m.g[8] == a) ||
+       (m.g[0] + m.g[4] + m.g[8] == a) || (m.g[2] + m.g[4] + m.g[6] == a)) {
+        evaluation -= 6;
+    }
+
+  
+    if(((m.g[1] + m.g[4] == ROND) && (m.g[7] == CROIX)) || ((m.g[2] + m.g[5] == ROND) && (m.g[8] == CROIX)) || 
+      ((m.g[0] + m.g[4] == ROND) && (m.g[8] == CROIX)) || ((m.g[3] + m.g[4] == ROND) && (m.g[5] == CROIX)) || 
+      ((m.g[6] + m.g[7] == ROND) && (m.g[8] == CROIX)) || ((m.g[0] + m.g[6] == ROND) && (m.g[3] == CROIX)) || 
+      ((m.g[4] + m.g[5] == ROND) && (m.g[3] == CROIX)) || ((m.g[0] + m.g[8] == ROND) && (m.g[4] == CROIX)) || 
+      ((m.g[3] + m.g[6] == ROND) && (m.g[0] == CROIX)) || ((m.g[0] + m.g[3] == ROND) && (m.g[6] == CROIX)) || 
+      ((m.g[2] + m.g[4] == ROND) && (m.g[6] == CROIX)) || ((m.g[7] + m.g[8] == ROND) && (m.g[6] == CROIX)) || 
+      ((m.g[1] + m.g[7] == ROND) && (m.g[4] == CROIX)) || ((m.g[0] + m.g[2] == ROND) && (m.g[1] == CROIX)) || 
+      ((m.g[4] + m.g[7] == ROND) && (m.g[1] == CROIX)) || ((m.g[4] + m.g[8] == ROND) && (m.g[0] == CROIX)) || 
+      ((m.g[2] + m.g[8] == ROND) && (m.g[5] == CROIX)) || ((m.g[5] + m.g[8] == ROND) && (m.g[2] == CROIX)) || 
+      ((m.g[1] + m.g[2] == ROND) && (m.g[0] == CROIX)) || ((m.g[3] + m.g[5] == ROND) && (m.g[4] == CROIX)) || 
+      ((m.g[0] + m.g[1] == ROND) && (m.g[2] == CROIX)) || ((m.g[2] + m.g[6] == ROND) && (m.g[4] == CROIX))) {
+        evaluation -= 9;
+    }
+    a = 1;
+    if((m.g[0] + m.g[1] + m.g[2] == a) || (m.g[3] + m.g[4] + m.g[5] == a) || (m.g[6] + m.g[7] + m.g[8] == a) ||
+       (m.g[0] + m.g[3] + m.g[6] == a) || (m.g[1] + m.g[4] + m.g[7] == a) || (m.g[2] + m.g[5] + m.g[8] == a) ||
+       (m.g[0] + m.g[4] + m.g[8] == a) || (m.g[2] + m.g[4] + m.g[6] == a)) {
+        evaluation += 6;
+    }
+    if(((m.g[1] + m.g[4] == 2) && (m.g[7] == ROND)) || ((m.g[2] + m.g[5] == 2) && (m.g[8] == ROND)) || 
+      ((m.g[0] + m.g[4] == 2) && (m.g[8] == ROND)) || ((m.g[3] + m.g[4] == 2) && (m.g[5] == ROND)) || 
+      ((m.g[6] + m.g[7] == 2) && (m.g[8] == ROND)) || ((m.g[0] + m.g[6] == 2) && (m.g[3] == ROND)) || 
+      ((m.g[4] + m.g[5] == 2) && (m.g[3] == ROND)) || ((m.g[0] + m.g[8] == 2) && (m.g[4] == ROND)) || 
+      ((m.g[3] + m.g[6] == 2) && (m.g[0] == ROND)) || ((m.g[0] + m.g[3] == 2) && (m.g[6] == ROND)) || 
+      ((m.g[2] + m.g[4] == 2) && (m.g[6] == ROND)) || ((m.g[7] + m.g[8] == 2) && (m.g[6] == ROND)) || 
+      ((m.g[1] + m.g[7] == 2) && (m.g[4] == ROND)) || ((m.g[0] + m.g[2] == 2) && (m.g[1] == ROND)) || 
+      ((m.g[4] + m.g[7] == 2) && (m.g[1] == ROND)) || ((m.g[4] + m.g[8] == 2) && (m.g[0] == ROND)) || 
+      ((m.g[2] + m.g[8] == 2) && (m.g[5] == ROND)) || ((m.g[5] + m.g[8] == 2) && (m.g[2] == ROND)) || 
+      ((m.g[1] + m.g[2] == 2) && (m.g[0] == ROND)) || ((m.g[3] + m.g[5] == 2) && (m.g[4] == ROND)) || 
+      ((m.g[0] + m.g[1] == 2) && (m.g[2] == ROND)) || ((m.g[2] + m.g[6] == 2) && (m.g[4] == ROND))) {
+        evaluation += 9; }
+ 
+    evaluation += isWin(m) * 12;
+    return evaluation;
+}
+
+int evaluation_partie(super_morpion sm, int position) {
+    int evaluation = 0;
+    float poids[] = {1.4, 1, 1.4, 1, 1.75, 1, 1.4, 1, 1.4};
+    int grand_morpion[9];
+    for (int i = 0; i < 9; i++) {
+        morpion tempMorpion;
+        memcpy(tempMorpion.g, sm.g[i], sizeof(tempMorpion.g));
+        tempMorpion.trait = sm.trait;
+        evaluation += evaluation_grille(tempMorpion) * 1.5 * poids[i];
+        if (i == position) {
+            evaluation += evaluation_grille(tempMorpion) * poids[i];
+        }
+        int Ev = isWin(tempMorpion);
+        evaluation -= Ev * poids[i];
+        grand_morpion[i] = Ev;
+    }
+    morpion morpion_principal;
+    memcpy(morpion_principal.g, grand_morpion, sizeof(morpion_principal.g));
+    morpion_principal.trait = sm.trait;
+    evaluation -= isWin(morpion_principal) * 5000;
+    evaluation += evaluation_grille(morpion_principal) * 150;
+    return evaluation;
+}
+
+
+EvalResult negaMax(super_morpion position, int grilleAJouer, int profondeur, int alpha, int beta, int joueur) {
+    EvalResult resultat;
+    resultat.meilleureEval = INT_MIN;
+    resultat.meilleureGrille = -1;
+
+    int evalCalculee = evaluation_partie(position, grilleAJouer);
+    if (profondeur <= 0 || abs(evalCalculee) > 5000) {
+        resultat.meilleureEval = joueur * evalCalculee;
+        return resultat;
+    }
+
+    morpion grilleActuelle;
+    memcpy(grilleActuelle.g, position.g[grilleAJouer], sizeof(grilleActuelle.g));
+    grilleActuelle.trait = joueur;
+
+    if (grilleAJouer != -1 && isWin(grilleActuelle) != 0) {
+        grilleAJouer = -1;
+    }
+
+    if (grilleAJouer != -1 && !includesZero(grilleActuelle)) {
+        grilleAJouer = -1;
+    }
+
+    int evalMax = INT_MIN;
+
+    for (int i = 0; i < 9; i++) {
+        int evalCourante = INT_MIN;
+        int nouvelleGrilleAJouer;
+        if (grilleAJouer == -1) {
+            nouvelleGrilleAJouer = i;
+        } else {
+            nouvelleGrilleAJouer = grilleAJouer;
+        }
+
+        for (int j = 0; j < 9; j++) {
+            if (isWin(grilleActuelle) == 0 && position.g[nouvelleGrilleAJouer][j] == -1) {
+                position.g[nouvelleGrilleAJouer][j] = joueur;
+                super_morpion nouvellePosition = position;
+                EvalResult resultatTemp = negaMax(nouvellePosition, j, profondeur - 1, -beta, -alpha, -joueur);
+                position.g[nouvelleGrilleAJouer][j] = -1;
+
+                evalCourante = -resultatTemp.meilleureEval;
+                if (evalCourante > evalMax) {
+                    evalMax = evalCourante;
+                    resultat.meilleureGrille = nouvelleGrilleAJouer;
+                }
+
+                if (alpha < evalCourante) {
+                    alpha = evalCourante;
+                }
+                if (beta <= alpha) {
+                    break;
+                }
+            }
+        }
+
+        if (grilleAJouer != -1) {
+            break;
+        }
+    }
+
+    resultat.meilleureEval = evalMax;
+    return resultat;
+}
+
