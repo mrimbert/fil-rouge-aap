@@ -4,14 +4,17 @@
 #include <string.h>
 #include <limits.h> //Pour ajouter les infinis
 
-int minimax(morpion node, int traitOrdi);
+int minimax(morpion node, int traitOrdi, int test);
 int isTerminal(morpion node); //Détecte si un noeud est terminal et renvoie 1 si c'est le cas
 morpion * nodeChild(morpion node);
+int eval(morpion M, int trait); //Renvoie la valeur de la grille de morpion 1 si victoire du joueur au trait, -1 si victoire de l'adversaire, 0 si égalité
+
 
 int main(int argc, char ** argv){
 	morpion grille_init = toMorpion(argv[1]);
-	printMorpion(grille_init);
-	morpion * test = nodeChild(grille_init);
+	printf("digraph {\n");
+	minimax(grille_init, grille_init.trait, -1);
+	printf("}\n");
 }
 
 
@@ -25,29 +28,43 @@ int isTerminal(morpion node){
 }
 
 
-int minimax(morpion node, int traitOrdi){ //On souhaite atteindre les noeuds terminaux, notre algorithme minimax ne prend donc pas d'argument de profondeur
+int minimax(morpion node, int traitOrdi, int test){ //On souhaite atteindre les noeuds terminaux, notre algorithme minimax ne prend donc pas d'argument de profondeur
+	
+	int numMere = 0;
 	int val = 0;
 	int i;
-	
 	if (isTerminal(node) == 1){
+		if(traitOrdi == node.trait) numMere = generateGrilleImage(node, 0);
+		else numMere = generateGrilleImage(node, 1);
+		val = eval(node, traitOrdi);
+		valeurMorpion(numMere, val);
+		if(test != -1) generateLinkMorpion(test, numMere);
 		return val;
 	}
 	
-	morpion * child = nodeChild(node);
 	
 	if(traitOrdi == node.trait){
 		val = INT_MIN;
+		numMere = generateGrilleImage(node, 0);
+		if(test != -1) generateLinkMorpion(test, numMere);
+		morpion * child = nodeChild(node);
 		for (i=0; i<9; i++){
 			if(memcmp(child[i].g,newMorpion().g, 9*sizeof(int))){
-				val = max(val, minimax(child[i], traitOrdi));
+				val = max(val, minimax(child[i], traitOrdi, numMere));
+				valeurMorpion(numMere, val);
 			}
 		}
 
 	} else {
 		val = INT_MAX;
+		numMere = generateGrilleImage(node, 1);
+		if(test != -1) generateLinkMorpion(test, numMere);
+		morpion * child = nodeChild(node);
 		for (i=0; i<9; i++){
 			if(memcmp(child[i].g,newMorpion().g, 9*sizeof(int))){
-				val = min(val, minimax(child[i], traitOrdi));
+				val = min(val, minimax(child[i], traitOrdi, numMere));
+				valeurMorpion(numMere, val);
+
 			}
 		}
 		
@@ -73,4 +90,12 @@ morpion * nodeChild(morpion node){
 	}
 	
 	return list;
+}
+
+int eval(morpion M, int trait){
+	if(trait == CROIX && isWin(M) == 1) return 1;
+	if(trait == CROIX && isWin(M) == -1) return -1;
+	if(trait == ROND && isWin(M)== 1) return -1;
+	if(trait == ROND && isWin(M) == -1) return 1;
+	return 0;
 }
