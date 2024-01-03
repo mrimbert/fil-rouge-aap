@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
-static int fileCounter = 0;
 int cadranprev = -1;
 
 super_morpion newSuperMorpion() {
@@ -69,16 +68,16 @@ void playSuperMorpion(super_morpion *sm, int pos) {
   printf("Le prochain coup devra être jouée dans le cadran %d \n", cadranprev);
 }
 
-/*void generateSuperMorpionImage(super_morpion sm) {
+void generateSuperMorpionImage(super_morpion sm) {
   int i;
   int j;
-  char fileName[30], pngFileName[30], command[100];
+  char fileName[100], pngFileName[100], command[200];
 
   // Créer un nom de fichier unique pour le fichier DOT et le fichier PNG
   snprintf(fileName, sizeof(fileName),
-           "./super_morpion_image/super_morpion%d.dot", fileCounter);
+           "./g.dot");
   snprintf(pngFileName, sizeof(pngFileName),
-           "./super_morpion_image/super_morpion%d.png", fileCounter);
+           "./g.png");
 
   FILE *file = fopen(fileName, "w");
   if (file == NULL) {
@@ -133,12 +132,10 @@ void playSuperMorpion(super_morpion *sm, int pos) {
   fprintf(file, "}\n");
   fclose(file);
   snprintf(command, sizeof(command),
-           "dot %s -Tpng -o ./super_morpion_image/super_morpion%d.png",
-           fileName, fileCounter);
+           "dot %s -Tpng -o g.png",
+           fileName);
   system(command);
-
-  fileCounter++; // Incrémenter le compteur pour la prochaine image
-}*/
+}
 
 int isWinSuperMorpion(super_morpion *sm) {
     morpion tempGrille;
@@ -350,5 +347,31 @@ EvalResult negaMax(super_morpion position, int grilleAJouer, int profondeur, int
 
     resultat.meilleureEval = evalMax;
     return resultat;
+}
+
+int convertMove() {
+  char colonne;
+  int grille, ligne, pos;
+
+    // Lire l'entrée de l'utilisateur
+    printf("Entrez votre coup (par exemple, 3 c3): ");
+    scanf("%d %c%d", &grille, &colonne, &ligne);
+
+    // Convertir la colonne de 'a', 'b', 'c' à 0, 1, 2
+    colonne -= 'a';
+
+    // Convertir la ligne de 1, 2, 3 à 0, 1, 2
+    ligne -= 1;
+
+    // Vérifier la validité de l'entrée
+    if(grille < 1 || grille > 9 || colonne < 0 || colonne > 2 || ligne < 0 || ligne > 2) {
+        printf("Coup invalide\n");
+        return -1; // Retourner -1 pour indiquer une entrée invalide
+    }
+
+    // Calculer la position linéaire
+    pos = (grille - 1) * 9 + ligne * 3 + colonne;
+
+    return pos;
 }
 
