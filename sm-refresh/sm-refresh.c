@@ -30,11 +30,13 @@ int main(int argc, char *argv[]) {
             playSuperMorpion(&sm, pos);  // Jouez le coup
             dernierePositionAdversaire = pos % 9;  // Mettre à jour la dernière position pour l'adversaire
             generateSuperMorpionImage(sm);  // Générer l'image
+            showSuperMorpion(&sm);
         } else {
             childNode meilleurCoup = obtenirMeilleurCoup(&sm, horizon, traitOrdi, dernierePositionAdversaire);  // Calculer le meilleur coup pour l'ordinateur
             sm = meilleurCoup.sm;  // Mettre à jour l'état du jeu avec le meilleur coup
             dernierePositionAdversaire = meilleurCoup.dernierePosition;  // Mettre à jour la dernière position en fonction du coup de l'ordinateur
             generateSuperMorpionImage(sm);  // Générer l'image
+            showSuperMorpion(&sm);
         }
     }
 
