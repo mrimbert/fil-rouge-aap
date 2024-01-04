@@ -23,3 +23,4 @@ void valeurMorpion(int num, int val);
 int max(int a, int b); //Fonction mathématique max usuel
 int min(int a, int b); //Fonction mathématique min usuel
 int getCounter();
+int isOver(morpion m);

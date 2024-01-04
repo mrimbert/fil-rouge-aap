@@ -375,3 +375,40 @@ int convertMove() {
     return pos;
 }
 
+int isOverSuperMorpion(super_morpion *sm) {
+    // Parcourir chaque grille du super-morpion
+    for (int i = 0; i < 9; i++) {
+        // Parcourir chaque case de la grille courante
+        for (int j = 0; j < 9; j++) {
+            // Si une case est vide, le jeu n'est pas encore terminé
+            if (sm->g[i][j] == -1) {
+                return 0; // Retourner 0 indique que le jeu n'est pas terminé
+            }
+        }
+    }
+    
+    // Si toutes les cases de toutes les grilles sont remplies, le jeu est terminé
+    return 1; // Retourner 1 indique que le jeu est terminé
+}
+
+void showSuperMorpion(super_morpion *sm) {
+    printf("État du Super Morpion :\n");
+    for (int row = 0; row < 3; row++) { // Pour chaque ligne de grilles
+        for (int line = 0; line < 3; line++) { // Pour chaque ligne dans la grille
+            for (int grid = 0; grid < 3; grid++) { // Pour chaque grille sur la ligne
+                // Calculez l'index de la grille dans le super morpion
+                int gridIndex = row * 3 + grid;
+                // Affichez la ligne correspondante de cette grille
+                for (int col = 0; col < 3; col++) {
+                    int cell = sm->g[gridIndex][line * 3 + col];
+                    if (cell == -1) printf(". ");
+                    else if (cell == ROND) printf("O ");
+                    else if (cell == CROIX) printf("X ");
+                }
+                printf("| "); // Séparateur de grille
+            }
+            printf("\n");
+        }
+        printf("------|-------|------\n"); // Séparateur de ligne de grilles
+    }
+}

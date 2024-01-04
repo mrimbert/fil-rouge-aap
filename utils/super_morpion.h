@@ -20,4 +20,5 @@ int evaluation_partie(super_morpion sm, int position);
 EvalResult negaMax(super_morpion position, int grilleAJouer, int profondeur, int alpha, int beta, int joueur);
 int includesZero(morpion M);
 int convertMove();
-
+int isOverSuperMorpion(super_morpion *sm);
+void showSuperMorpion(super_morpion *sm);

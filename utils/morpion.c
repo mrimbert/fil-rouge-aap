@@ -245,4 +245,12 @@ int getCounter(){
 	return morpionCounter;
 }
 
-
+// Vérifie si une grille 3x3 dans une structure morpion est complète
+int isOver(morpion m) {
+    for (int i = 0; i < 9; i++) {
+        if (m.g[i] == -1) { // Si une case est vide, la grille n'est pas complète
+            return 0;
+        }
+    }
+    return 1; // Toutes les cases sont remplies
+}
