@@ -1,11 +1,8 @@
-REP=$(shell basename $(PWD))
 CIBLE=$(REP).exe
 CFLAGS=-Wall -Wno-format-overflow -Wno-format-truncation
 
-# makefile générique pour produire un code source 
-# dont le nom correspond au nom du répertoire qui le contient
 
-all: tttree sm-refresh
+all: tttree sm-refresh.exe
 	@echo "Le programme tttree a été produit dans le répertoire $(REP)"
 	@echo "Le programme sm-refresh a été produit dans le répertoire $(REP)"
 
@@ -29,11 +26,15 @@ tttree: tttree.c ./utils/morpion.c
 	@echo "Le programme tttree.exe a été produit"
 	gcc $(CFLAGS) tttree.c ./utils/morpion.c -o tttree.exe
 
-sm-refresh: ./sm-refresh/sm-refresh.c ./sm-refresh/minimax.c ./utils/super_morpion.c ./utils/morpion.c
+sm-refresh.exe: ./sm-refresh/sm-refresh.o ./sm-refresh/minimax.o ./utils/super_morpion.o ./utils/morpion.o
 	@echo "Le programme sm-refresh.exe a été produit"
-	gcc $(CFLAGS) ./sm-refresh/sm-refresh.c ./sm-refresh/minimax.c ./utils/super_morpion.c ./utils/morpion.c -o sm-refresh.exe
+	gcc -Wall -o $@ $^
+
 
 test: ./sm-refresh/test.c ./utils/morpion.c ./sm-refresh/minimax.c ./utils/super_morpion.c 
 	@echo "Le programme test.exe a été produit"
 	gcc $(CFLAGS) ./sm-refresh/test.c ./utils/morpion.c ./sm-refresh/minimax.c ./utils/super_morpion.c -o test.exe
+	
+%.o: %.c
+	gcc -c $< -o $@
 
