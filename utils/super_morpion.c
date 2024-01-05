@@ -32,14 +32,14 @@ int includesZero(morpion M) {
 void playSuperMorpion(super_morpion *sm, int pos) {
   assert(pos <= 88 && pos >= 0);
   if (cadranprev == -1) {
-  	if(pos>=10) cadranprev = (pos / 10); // Numéro du cadran
+  	if(pos>=10) cadranprev = (pos / 9); // Numéro du cadran
   	else cadranprev = 0;
   }
-  int j = (pos % 10); // Position dans le cadran
+  int j = (pos % 9); // Position dans le cadran
 
   morpion grille = newMorpion();
   grille.trait = sm->trait;
-  memcpy(grille.g, sm->g[cadranprev], 9);
+  memcpy(grille.g, sm->g[cadranprev], sizeof(grille.g));
 
   if (abs(isWin(grille)) == 1) {
     printf("La grille est déjà jouée, merci de jouer dans une autre grille !");
@@ -60,18 +60,25 @@ void playSuperMorpion(super_morpion *sm, int pos) {
   }
   
   grille.trait = sm->trait;
-  memcpy(grille.g, sm->g[cadranprev], 9);
+  memcpy(grille.g, sm->g[cadranprev], sizeof(grille.g));
+ /*
+  printf("\n");
+  printMorpion(grille);
+  printf("Grille jouée remportée : %d\n", abs(isWin(grille)));
+  */
   if (abs(isWin(grille)) == 1) {
     cadranprev = -1;
   } else {
     cadranprev = j;
   }
-  printf("Le prochain coup devra être jouée dans le cadran %d \n", cadranprev);
+  printf("Le prochain coup devra être jouée dans le cadran %d \n", cadranprev+1);
 }
 
 void generateSuperMorpionImage(super_morpion sm) {
   int i;
   int j;
+  int a;
+  morpion tempMorpion = newMorpion();
   char fileName[100], pngFileName[100], command[200];
 
   // Créer un nom de fichier unique pour le fichier DOT et le fichier PNG
@@ -92,11 +99,50 @@ void generateSuperMorpionImage(super_morpion sm) {
   fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" "
                 "style=\"rounded\" bgcolor=\"black\"> \n");
   fprintf(file, "<TR> \n");
-  fprintf(file, "<TD bgcolor=\"black\"> \n");
+  
+   memcpy(tempMorpion.g, sm.g[0], sizeof(tempMorpion.g));
+  
+  if(isWin(tempMorpion) == -1){
+    fprintf(file, "<TD bgcolor=\"black\"> \n");
+  } else {
+  fprintf(file, "<TD bgcolor=\"white\"> \n"); }
+  
+
+  if(isWin(tempMorpion) == 1){
   fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" "
-                "style=\"rounded\" bgcolor=\"white\"> \n");
+                "style=\"rounded\" bgcolor=\"black\"> \n");
+  } else {
+  fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" "
+                "style=\"rounded\" bgcolor=\"white\"> \n"); }
   fprintf(file, "<TR> \n");
   for (i = 0; i < 9; i++) {
+  memcpy(tempMorpion.g, sm.g[i], sizeof(tempMorpion.g));
+  a = isWin(tempMorpion);
+  if(abs(a) == 1){
+  	if(a == -1){
+  	for(j = 0; j<9; j++){
+  		fprintf(file, "<TD bgcolor=\"white\">&nbsp;</TD> \n");
+  		if (j % 3 == 2) {
+        		fprintf(file, "</TR> \n");
+       		if (j != 8) {
+          		fprintf(file, "<TR> \n");
+        		}
+      		}
+  	}
+  } else {
+  for(j = 0; j<9; j++){
+  		fprintf(file, "<TD bgcolor=\"black\">&nbsp;</TD> \n");
+  		if (j % 3 == 2) {
+        		fprintf(file, "</TR> \n");
+       		if (j != 8) {
+          		fprintf(file, "<TR> \n");
+        		}
+      		}
+  	}
+  
+  }
+  } 
+  else {
     for (j = 0; j < 9; j++) {
       if (sm.g[i][j] == ROND) {
         fprintf(file, "<TD bgcolor=\"white\">O</TD> \n");
@@ -114,6 +160,7 @@ void generateSuperMorpionImage(super_morpion sm) {
         }
       }
     }
+    }
     fprintf(file, "</TABLE> \n");
     fprintf(file, "</TD> \n");
     if (i % 3 == 2 && i != 8) {
@@ -121,9 +168,20 @@ void generateSuperMorpionImage(super_morpion sm) {
       fprintf(file, "<TR> \n");
     }
     if (i != 8) {
-      fprintf(file, "<TD bgcolor=\"white\"> \n");
+      memcpy(tempMorpion.g, sm.g[i+1], sizeof(tempMorpion.g));
+    
+      if(isWin(tempMorpion) == -1){
+      	fprintf(file, "<TD bgcolor=\"black\"> \n");
+      } else {
+      fprintf(file, "<TD bgcolor=\"white\"> \n"); }
+      
+
+      if(isWin(tempMorpion) == 1){
+       fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" "
+                    "style=\"rounded\" bgcolor=\"black\"> \n");
+      } else {
       fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" "
-                    "style=\"rounded\" bgcolor=\"white\"> \n");
+                    "style=\"rounded\" bgcolor=\"white\"> \n");}
       fprintf(file, "<TR> \n");
     }
   }
@@ -216,6 +274,8 @@ int evaluation_grille(morpion m) {
         }
     }
     }*/
+    
+    //Si la grille contient une situation avec 2 Rond alignés (ie une situation gagnante si le joueur est rationnel), on soustrait des points à la valeur de la grille
     if(((m.g[0] == ROND) + (m.g[1] == ROND) + (m.g[2] == ROND) == 2) || ((m.g[3] == ROND) + (m.g[4] == ROND) + (m.g[5] == ROND) == 2) ||
       ((m.g[6] == ROND) + (m.g[7] == ROND) + (m.g[8] == ROND) == 2) || ((m.g[0] == ROND) + (m.g[3] == ROND) + (m.g[6] == ROND) == 2) ||
       ((m.g[1] == ROND) + (m.g[4] == ROND) + (m.g[7] == ROND) == 2) || ((m.g[2] == ROND) + (m.g[5] == ROND) + (m.g[8] == ROND) == 2) ||
@@ -223,27 +283,30 @@ int evaluation_grille(morpion m) {
         evaluation -= 6;
     }
 
-  
-    if(((m.g[1] + m.g[4] == ROND) && (m.g[7] == CROIX)) || ((m.g[2] + m.g[5] == ROND) && (m.g[8] == CROIX)) || 
-      ((m.g[0] + m.g[4] == ROND) && (m.g[8] == CROIX)) || ((m.g[3] + m.g[4] == ROND) && (m.g[5] == CROIX)) || 
-      ((m.g[6] + m.g[7] == ROND) && (m.g[8] == CROIX)) || ((m.g[0] + m.g[6] == ROND) && (m.g[3] == CROIX)) || 
-      ((m.g[4] + m.g[5] == ROND) && (m.g[3] == CROIX)) || ((m.g[0] + m.g[8] == ROND) && (m.g[4] == CROIX)) || 
-      ((m.g[3] + m.g[6] == ROND) && (m.g[0] == CROIX)) || ((m.g[0] + m.g[3] == ROND) && (m.g[6] == CROIX)) || 
-      ((m.g[2] + m.g[4] == ROND) && (m.g[6] == CROIX)) || ((m.g[7] + m.g[8] == ROND) && (m.g[6] == CROIX)) || 
-      ((m.g[1] + m.g[7] == ROND) && (m.g[4] == CROIX)) || ((m.g[0] + m.g[2] == ROND) && (m.g[1] == CROIX)) || 
-      ((m.g[4] + m.g[7] == ROND) && (m.g[1] == CROIX)) || ((m.g[4] + m.g[8] == ROND) && (m.g[0] == CROIX)) || 
-      ((m.g[2] + m.g[8] == ROND) && (m.g[5] == CROIX)) || ((m.g[5] + m.g[8] == ROND) && (m.g[2] == CROIX)) || 
-      ((m.g[1] + m.g[2] == ROND) && (m.g[0] == CROIX)) || ((m.g[3] + m.g[5] == ROND) && (m.g[4] == CROIX)) || 
-      ((m.g[0] + m.g[1] == ROND) && (m.g[2] == CROIX)) || ((m.g[2] + m.g[6] == ROND) && (m.g[4] == CROIX))) {
+  //Si l'ordinateur bloque une situation gagnante des Ronds alors on ajoute des points à la valeur de la grille
+    if(((m.g[1] == ROND) && (m.g[4] == ROND) && (m.g[7] == CROIX)) || ((m.g[2] == ROND) && (m.g[5] == ROND) && (m.g[8] == CROIX)) || 
+      ((m.g[0] == ROND) && (m.g[4] == ROND) && (m.g[8] == CROIX)) || ((m.g[3] == ROND) && (m.g[4] == ROND) && (m.g[5] == CROIX)) || 
+      ((m.g[6] == ROND) && (m.g[7] == ROND) && (m.g[8] == CROIX)) || ((m.g[0] == ROND) && (m.g[6] == ROND) && (m.g[3] == CROIX)) || 
+      ((m.g[4] == ROND) && (m.g[5] == ROND) && (m.g[3] == CROIX)) || ((m.g[0] == ROND) && (m.g[8] == ROND) && (m.g[4] == CROIX)) || 
+      ((m.g[3] == ROND) && (m.g[6] == ROND) && (m.g[0] == CROIX)) || ((m.g[0] == ROND) && (m.g[3] == ROND) && (m.g[6] == CROIX)) || 
+      ((m.g[2] == ROND) && (m.g[4] == ROND) && (m.g[6] == CROIX)) || ((m.g[7] == ROND) && (m.g[8] == ROND) && (m.g[6] == CROIX)) || 
+      ((m.g[1] == ROND) && (m.g[7] == ROND) && (m.g[4] == CROIX)) || ((m.g[0] == ROND) && (m.g[2] == ROND) && (m.g[1] == CROIX)) || 
+      ((m.g[4] == ROND) && (m.g[7] == ROND) && (m.g[1] == CROIX)) || ((m.g[4] == ROND) && (m.g[8] == ROND) && (m.g[0] == CROIX)) || 
+      ((m.g[2] == ROND) && (m.g[8] == ROND) && (m.g[5] == CROIX)) || ((m.g[5] == ROND) && (m.g[8] == ROND) && (m.g[2] == CROIX)) || 
+      ((m.g[1] == ROND) && (m.g[2] == ROND) && (m.g[0] == CROIX)) || ((m.g[3] == ROND) && (m.g[5] == ROND) && (m.g[4] == CROIX)) || 
+      ((m.g[0] == ROND) && (m.g[1] == ROND) && (m.g[2] == CROIX)) || ((m.g[2] == ROND) && (m.g[6] == ROND) && (m.g[4] == CROIX))) {
         evaluation += 9;
     }
 
+   //Si l'ordinateur se crée une situation gagnante alors on ajoute des points à la valeur de la grille. 
     if(((m.g[0] == CROIX) + (m.g[1] == CROIX) + (m.g[2] == CROIX) == 2) || ((m.g[3] == CROIX) + (m.g[4] == CROIX) + (m.g[5] == CROIX) == 2) ||
       ((m.g[6] == CROIX) + (m.g[7] == CROIX) + (m.g[8] == CROIX) == 2) || ((m.g[0] == CROIX) + (m.g[3] == CROIX) + (m.g[6] == CROIX) == 2) ||
       ((m.g[1] == CROIX) + (m.g[4] == CROIX) + (m.g[7] == CROIX) == 2) || ((m.g[2] == CROIX) + (m.g[5] == CROIX) + (m.g[8] == CROIX) == 2) ||
       ((m.g[0] == CROIX) + (m.g[4] == CROIX) + (m.g[8] == CROIX) == 2) || ((m.g[2] == CROIX) + (m.g[4] == CROIX) + (m.g[6] == CROIX) == 2)) {
         evaluation += 6;
     }
+    
+    //Si les RONDs bloquent une situation gagnante de l'ordinateur alors on soustrait des points de valeur de la grille
     if(((m.g[1] + m.g[4] == 2) && (m.g[7] == ROND)) || ((m.g[2] + m.g[5] == 2) && (m.g[8] == ROND)) || 
       ((m.g[0] + m.g[4] == 2) && (m.g[8] == ROND)) || ((m.g[3] + m.g[4] == 2) && (m.g[5] == ROND)) || 
       ((m.g[6] + m.g[7] == 2) && (m.g[8] == ROND)) || ((m.g[0] + m.g[6] == 2) && (m.g[3] == ROND)) || 
@@ -257,6 +320,7 @@ int evaluation_grille(morpion m) {
       ((m.g[0] + m.g[1] == 2) && (m.g[2] == ROND)) || ((m.g[2] + m.g[6] == 2) && (m.g[4] == ROND))) {
         evaluation -= 9; }
  
+//Si la grille comporte une victoire, on ajoute ou soustrait ses points en fonction de qui l'emporte
     evaluation += isWin(m) * 12;
     return evaluation;
 }
@@ -265,7 +329,10 @@ int evaluation_grille(morpion m) {
 
 int evaluation_partie(super_morpion sm, int position) {
     int evaluation = 0;
+    
+    //On associe à chaque carré un poids qui correspond à son importance pour la victoire
     float poids[] = {1.4, 1, 1.4, 1, 1.75, 1, 1.4, 1, 1.4};
+    
     int grand_morpion[9];
     for (int i = 0; i < 9; i++) {
         morpion tempMorpion;
@@ -378,7 +445,7 @@ int convertMove() {
     }
 
     // Calculer la position linéaire
-    pos = (grille - 1) * 10 + ligne * 3 + colonne;
+    pos = (grille - 1) * 9 + ligne * 3 + colonne;
     printf("Position renvoyée : %d \n", pos);
 
     return pos;
@@ -422,8 +489,4 @@ void showSuperMorpion(super_morpion *sm) {
         }
         printf("------|-------|------\n"); // Séparateur de ligne de grilles
     }
-}
-
-void updateCadranPrev(int pos){
-	cadranprev = pos;
 }
