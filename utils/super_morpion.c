@@ -350,8 +350,9 @@ EvalResult negaMax(super_morpion position, int grilleAJouer, int profondeur, int
 }
 
 int convertMove() {
-  char colonne;
-  int grille, ligne, pos;
+    char colonne;
+    int grille, ligne;
+    int pos;
 
     // Lire l'entrée de l'utilisateur
     printf("Entrez votre coup (par exemple, 3 c3): ");
@@ -360,12 +361,13 @@ int convertMove() {
     // Convertir la colonne de 'a', 'b', 'c' à 0, 1, 2
     colonne -= 'a';
 
-    // Convertir la ligne de 1, 2, 3 à 0, 1, 2
-    ligne -= 1;
+    // Convertir la ligne de 1, 2, 3 à 0, 1, 2 (soustraire 1)
+    ligne -= 1;  // Changez ici de '1' à 1
 
     // Vérifier la validité de l'entrée
     if(grille < 1 || grille > 9 || colonne < 0 || colonne > 2 || ligne < 0 || ligne > 2) {
         printf("Coup invalide\n");
+        printf("grille : %d, colonne : %d, ligne : %d\n", grille, colonne, ligne);
         return -1; // Retourner -1 pour indiquer une entrée invalide
     }
 
@@ -374,6 +376,8 @@ int convertMove() {
 
     return pos;
 }
+
+
 
 int isOverSuperMorpion(super_morpion *sm) {
     // Parcourir chaque grille du super-morpion
