@@ -34,7 +34,8 @@ int main(int argc, char *argv[]) {
             showSuperMorpion(&sm);
         } else {
             childNode meilleurCoup = obtenirMeilleurCoup(&sm, horizon, traitOrdi, dernierePositionAdversaire);  // Calculer le meilleur coup pour l'ordinateur
-            sm = meilleurCoup.sm;  // Mettre à jour l'état du jeu avec le meilleur coup
+            playSuperMorpion(&sm, meilleurCoup.dernierePosition);
+           // sm = meilleurCoup.sm;  // Mettre à jour l'état du jeu avec le meilleur coup
             dernierePositionAdversaire = meilleurCoup.dernierePosition;  // Mettre à jour la dernière position en fonction du coup de l'ordinateur
             generateSuperMorpionImage(sm);  // Générer l'image
             showSuperMorpion(&sm);
