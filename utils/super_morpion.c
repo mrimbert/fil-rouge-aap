@@ -203,8 +203,8 @@ int isWinSuperMorpion(super_morpion *sm) {
 }
 
 int evaluation_grille(morpion m) {
- int evaluation = 0;
-    float points[] = {0.3, 0.2, 0.3, 0.2, 0.4, 0.2, 0.3, 0.2, 0.3};
+ float evaluation = 0.0;
+    /*float points[] = {0.3, 0.2, 0.3, 0.2, 0.4, 0.2, 0.3, 0.2, 0.3};
     for(int i = 0; i < 9; i++) {
         if(m.g[i] == -1) {
         evaluation = evaluation + 0;
@@ -215,11 +215,11 @@ int evaluation_grille(morpion m) {
         evaluation = evaluation + points[i];
         }
     }
-    }
-    int a = -1;
-    if((m.g[0] + m.g[1] + m.g[2] == a) || (m.g[3] + m.g[4] + m.g[5] == a) || (m.g[6] + m.g[7] + m.g[8] == a) ||
-       (m.g[0] + m.g[3] + m.g[6] == a) || (m.g[1] + m.g[4] + m.g[7] == a) || (m.g[2] + m.g[5] + m.g[8] == a) ||
-       (m.g[0] + m.g[4] + m.g[8] == a) || (m.g[2] + m.g[4] + m.g[6] == a)) {
+    }*/
+    if(((m.g[0] == ROND) + (m.g[1] == ROND) + (m.g[2] == ROND) == 2) || ((m.g[3] == ROND) + (m.g[4] == ROND) + (m.g[5] == ROND) == 2) ||
+      ((m.g[6] == ROND) + (m.g[7] == ROND) + (m.g[8] == ROND) == 2) || ((m.g[0] == ROND) + (m.g[3] == ROND) + (m.g[6] == ROND) == 2) ||
+      ((m.g[1] == ROND) + (m.g[4] == ROND) + (m.g[7] == ROND) == 2) || ((m.g[2] == ROND) + (m.g[5] == ROND) + (m.g[8] == ROND) == 2) ||
+      ((m.g[0] == ROND) + (m.g[4] == ROND) + (m.g[8] == ROND) == 2) || ((m.g[2] == ROND) + (m.g[4] == ROND) + (m.g[6] == ROND) == 2)) {
         evaluation -= 6;
     }
 
@@ -235,12 +235,13 @@ int evaluation_grille(morpion m) {
       ((m.g[2] + m.g[8] == ROND) && (m.g[5] == CROIX)) || ((m.g[5] + m.g[8] == ROND) && (m.g[2] == CROIX)) || 
       ((m.g[1] + m.g[2] == ROND) && (m.g[0] == CROIX)) || ((m.g[3] + m.g[5] == ROND) && (m.g[4] == CROIX)) || 
       ((m.g[0] + m.g[1] == ROND) && (m.g[2] == CROIX)) || ((m.g[2] + m.g[6] == ROND) && (m.g[4] == CROIX))) {
-        evaluation -= 9;
+        evaluation += 9;
     }
-    a = 1;
-    if((m.g[0] + m.g[1] + m.g[2] == a) || (m.g[3] + m.g[4] + m.g[5] == a) || (m.g[6] + m.g[7] + m.g[8] == a) ||
-       (m.g[0] + m.g[3] + m.g[6] == a) || (m.g[1] + m.g[4] + m.g[7] == a) || (m.g[2] + m.g[5] + m.g[8] == a) ||
-       (m.g[0] + m.g[4] + m.g[8] == a) || (m.g[2] + m.g[4] + m.g[6] == a)) {
+
+    if(((m.g[0] == CROIX) + (m.g[1] == CROIX) + (m.g[2] == CROIX) == 2) || ((m.g[3] == CROIX) + (m.g[4] == CROIX) + (m.g[5] == CROIX) == 2) ||
+      ((m.g[6] == CROIX) + (m.g[7] == CROIX) + (m.g[8] == CROIX) == 2) || ((m.g[0] == CROIX) + (m.g[3] == CROIX) + (m.g[6] == CROIX) == 2) ||
+      ((m.g[1] == CROIX) + (m.g[4] == CROIX) + (m.g[7] == CROIX) == 2) || ((m.g[2] == CROIX) + (m.g[5] == CROIX) + (m.g[8] == CROIX) == 2) ||
+      ((m.g[0] == CROIX) + (m.g[4] == CROIX) + (m.g[8] == CROIX) == 2) || ((m.g[2] == CROIX) + (m.g[4] == CROIX) + (m.g[6] == CROIX) == 2)) {
         evaluation += 6;
     }
     if(((m.g[1] + m.g[4] == 2) && (m.g[7] == ROND)) || ((m.g[2] + m.g[5] == 2) && (m.g[8] == ROND)) || 
@@ -254,11 +255,13 @@ int evaluation_grille(morpion m) {
       ((m.g[2] + m.g[8] == 2) && (m.g[5] == ROND)) || ((m.g[5] + m.g[8] == 2) && (m.g[2] == ROND)) || 
       ((m.g[1] + m.g[2] == 2) && (m.g[0] == ROND)) || ((m.g[3] + m.g[5] == 2) && (m.g[4] == ROND)) || 
       ((m.g[0] + m.g[1] == 2) && (m.g[2] == ROND)) || ((m.g[2] + m.g[6] == 2) && (m.g[4] == ROND))) {
-        evaluation += 9; }
+        evaluation -= 9; }
  
     evaluation += isWin(m) * 12;
     return evaluation;
 }
+
+
 
 int evaluation_partie(super_morpion sm, int position) {
     int evaluation = 0;
@@ -283,6 +286,7 @@ int evaluation_partie(super_morpion sm, int position) {
     evaluation += evaluation_grille(morpion_principal) * 150;
     return evaluation;
 }
+
 
 
 EvalResult negaMax(super_morpion position, int grilleAJouer, int profondeur, int alpha, int beta, int joueur) {
