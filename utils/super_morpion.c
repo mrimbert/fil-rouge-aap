@@ -32,7 +32,8 @@ int includesZero(morpion M) {
 void playSuperMorpion(super_morpion *sm, int pos) {
   assert(pos <= 88 && pos >= 0);
   if (cadranprev == -1) {
-    cadranprev = (pos / 10); // Numéro du cadran
+  	if(pos>=10) cadranprev = (pos / 10); // Numéro du cadran
+  	else cadranprev = 0;
   }
   int j = (pos % 10); // Position dans le cadran
 
@@ -363,6 +364,7 @@ int convertMove() {
 
     // Convertir la ligne de 1, 2, 3 à 0, 1, 2 (soustraire 1)
     ligne -= 1;  // Changez ici de '1' à 1
+    printf("grille : %d, colonne : %d, ligne : %d\n", grille, colonne, ligne);
 
     // Vérifier la validité de l'entrée
     if(grille < 1 || grille > 9 || colonne < 0 || colonne > 2 || ligne < 0 || ligne > 2) {
@@ -372,7 +374,8 @@ int convertMove() {
     }
 
     // Calculer la position linéaire
-    pos = (grille - 1) * 9 + ligne * 3 + colonne;
+    pos = (grille - 1) * 10 + ligne * 3 + colonne;
+    printf("Position renvoyée : %d \n", pos);
 
     return pos;
 }
@@ -415,4 +418,8 @@ void showSuperMorpion(super_morpion *sm) {
         }
         printf("------|-------|------\n"); // Séparateur de ligne de grilles
     }
+}
+
+void updateCadranPrev(int pos){
+	cadranprev = pos;
 }
