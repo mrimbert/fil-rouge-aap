@@ -31,9 +31,9 @@ sm-refresh.exe: ./sm-refresh/sm-refresh.o ./sm-refresh/minimax.o ./utils/super_m
 	gcc -Wall -o $@ $^
 
 
-test: ./sm-refresh/test.c ./utils/morpion.c ./sm-refresh/minimax.c ./utils/super_morpion.c 
+test.exe: ./sm-refresh/test.o ./utils/morpion.o ./sm-refresh/minimax.o ./utils/super_morpion.o 
 	@echo "Le programme test.exe a été produit"
-	gcc $(CFLAGS) ./sm-refresh/test.c ./utils/morpion.c ./sm-refresh/minimax.c ./utils/super_morpion.c -o test.exe
+	gcc -Wall -o $@ $^
 	
 %.o: %.c
 	gcc -c $< -o $@
