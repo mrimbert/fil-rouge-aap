@@ -14,7 +14,7 @@ clean:
 	@rm -rf g1.png
 	@rm -rf g2.png
 	
-	@echo"Nettoyage de sm-refresh"
+	@echo "Nettoyage de sm-refresh"
 	@rm -rf sm-refresh.exe
 	@rm -rf g.dot
 	@rm -rf g.png
