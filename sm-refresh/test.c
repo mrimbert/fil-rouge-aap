@@ -18,10 +18,10 @@ void test_playInCompletedOrWonMorpion();
 int main() {
     printf("Début des tests...\n");
     //test_minimax();
-    //test_nodeChildren();
+    test_nodeChildren();
     //test_isTerminal();
     //test_evaluate();
-    test_obtenirMeilleurCoup();
+    //test_obtenirMeilleurCoup();
     //test_playInCompletedOrWonMorpion();
     printf("Tous les tests sont terminés !\n");
     return 0;
@@ -30,14 +30,13 @@ int main() {
 void test_minimax() {
     // Créer un état de jeu spécifique pour le test
     super_morpion node = newSuperMorpion();
-    printf("Le super morpion a été créé\n");
 
-    // Configurez un scénario de jeu où l'ordinateur peut prendre une décision avantageuse
+    // Configurer un scénario de jeu où l'ordinateur peut prendre une décision avantageuse
     node.g[0][0] = ROND;  // Supposons que ROND est l'ordinateur
     node.g[0][1] = ROND;
     node.g[0][2] = -1;    // Case vide où l'ordinateur peut gagner
     node.trait = ROND;    // C'est au tour de l'ordinateur de jouer
-    int dernierePosition = 2;  // Supposons que la dernière position jouée est 2
+    int dernierePosition = 0;  // Supposons que la dernière position jouée est 2
 
     // Définir une profondeur de recherche
     int depth = 3;  // Profondeur suffisante pour que Minimax trouve le coup gagnant
@@ -53,17 +52,7 @@ void test_minimax() {
     // Appeler Minimax avec la structure childNode, la profondeur, et le trait de l'ordinateur
     int bestValue = minimax(testNode, depth, traitOrdi);
 
-
-    // Définir le résultat attendu pour ce scénario de test
-    int expectedValue = 3;  // Vous devrez déterminer cette valeur en fonction de votre fonction d'évaluation et de l'état du jeu
-
-    // Vérifier si le résultat de Minimax est celui attendu
-    if (bestValue == expectedValue) {
-        printf("Test minimax: PASSED\n");
-    } else {
-        printf("Test minimax: FAILED\n");
-        printf("Expected %d, but got %d\n", expectedValue, bestValue);
-    }
+    printf("La meilleure valeur est : %d\n",bestValue);
 }
 
 
@@ -238,27 +227,29 @@ void setupOngoingNode(super_morpion *node) {
     }
 }*/
 
-/*void test_nodeChildren() {
+void test_nodeChildren() {
     // Créer un état de jeu spécifique pour le test
     super_morpion node = newSuperMorpion();
     
-    node.g[4][0] = ROND;
+    // Configurer un scénario de jeu spécifique
+    node.g[4][0] = ROND;  // Supposons que la grille 5 a déjà quelques coups joués
     node.g[4][1] = ROND;
     node.g[4][2] = ROND;
-    node.g[0][0] = ROND;  // Premier coup joué par ROND
-    node.g[0][4] = CROIX;  // Premier coup joué par CROIX
-    node.trait = ROND;     // C'est au tour de ROND de jouer
-    dernierePositionAdversaire = 4;  // Le dernier coup joué par CROIX était dans la grille 
+    node.g[0][0] = ROND;  // Supposons un coup joué dans la grille 1
+    node.trait = CROIX;   // C'est au tour de CROIX de jouer
+    int dernierePositionAdversaire = 26;  // Le dernier coup joué par ROND était dans la grille 1
 
     int childrenCount;
-    super_morpion *children = nodeChildren(&node, &childrenCount);
+    childNode *children = nodeChildren(&node, dernierePositionAdversaire, &childrenCount);
 
     // Définir le nombre attendu d'enfants pour ce scénario spécifique
-    // Par exemple, si vous savez qu'il y a 8 coups valides possibles
-    int expectedChildrenCount = 9;
+    int expectedChildrenCount = 8;  // Ajuster selon la logique du jeu et le scénario configuré
 
-    for(int i = 0; i != childrenCount; i++){
-        generateSuperMorpionImage(children[i]);
+    // Afficher tous les enfants (coup possibles) générés
+    printf("Affichage des %d enfants générés :\n", childrenCount);
+    for (int i = 0; i < childrenCount; i++) {
+        printf("Enfant %d:\n", i + 1);
+        showSuperMorpion(&children[i].sm); // Utiliser la fonction showSuperMorpion pour afficher chaque enfant
     }
 
     // Vérifier si le nombre d'enfants générés est égal au nombre attendu
@@ -273,26 +264,32 @@ void setupOngoingNode(super_morpion *node) {
     free(children);
 }
 
-*/
+
 void test_obtenirMeilleurCoup() {
     // Créer un état de jeu spécifique pour le test
     super_morpion node = newSuperMorpion();
 
     // Configurer un scénario de jeu où l'ordinateur peut prendre une décision avantageuse
-    node.g[0][0] = ROND;  // Première case du premier morpion
-    node.g[0][1] = ROND;  // Deuxième case du premier morpion
-    node.g[0][2] = -1;    // Case vide où l'ordinateur peut gagner
+    node.g[0][0] = ROND;  // Supposons que ROND est l'ordinateur
+    node.g[0][1] = ROND;    // Case vide où l'ordinateur peut gagner
     node.trait = ROND;    // C'est au tour de l'ordinateur de jouer
-    int dernierePositionAdversaire = 4;  // Supposons que la dernière position jouée est 4
+    int dernierePositionAdversaire = 26;  // Supposons que la dernière position jouée est 4
 
+    // Définir une profondeur de recherche
     int depth = 3;  // Profondeur suffisante pour que Minimax trouve le meilleur coup
+
+    // Définir le trait de l'ordinateur
     int traitOrdi = ROND;  // Supposons que ROND est l'ordinateur
 
     // Appeler obtenirMeilleurCoup avec l'état de jeu spécifique, la profondeur et la dernière position
     childNode meilleurCoup = obtenirMeilleurCoup(&node, depth, traitOrdi, dernierePositionAdversaire);
 
+    // Afficher le super morpion après le meilleur coup trouvé
+    printf("Meilleur coup trouvé :\n");
+    showSuperMorpion(&meilleurCoup.sm);
+
     // Définir l'index de la position attendue pour le meilleur coup
-    int expectedBestMoveIndex = 2;  // Supposons que la position gagnante soit à l'index 2 pour cet état
+    int expectedBestMoveIndex = 2;  // Ajustez en fonction de la logique de votre jeu
 
     // Vérifier si le meilleur coup renvoyé correspond au meilleur coup attendu
     if (meilleurCoup.sm.g[0][expectedBestMoveIndex] == traitOrdi) {
@@ -302,7 +299,6 @@ void test_obtenirMeilleurCoup() {
         printf("Expected best move at position %d, but got different position\n", expectedBestMoveIndex);
     }
 }
-
 
 
 

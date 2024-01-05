@@ -37,7 +37,7 @@ childNode obtenirMeilleurCoup(super_morpion *node, int depth, int traitOrdi, int
 
     // Après avoir sélectionné le meilleur coup, affichez le cadran où le prochain coup doit être joué
     int prochainCadran = meilleurCoup.dernierePosition % 9; // Calculer le cadran pour le prochain coup
-    printf("Le prochain coup devra être joué dans le cadran %d.\n", prochainCadran + 1); // Les cadrans sont généralement numérotés de 1 à 9
+    printf("Le prochain coup devra être joué dans le cadran %d.\n", prochainCadran); // Les cadrans sont généralement numérotés de 1 à 9
 
     free(children);
     return meilleurCoup;
@@ -107,11 +107,16 @@ childNode * nodeChildren(super_morpion *node, int dernierePosition, int *childre
         grid = dernierePosition % 9;
     }
 
+    // Le joueur peut jouer n'importe où si aucun coup n'a été joué ou si la grille ciblée est déjà gagnée ou complète
+    int canPlayAnywhere = (dernierePosition == -1 || isGridWonOrComplete(node, grid));
+
     // Compter les coups valides
     for (int i = 0; i < 81; i++) {
         int currentGrid = i / 9;
-        if (node->g[currentGrid][i % 9] == -1 &&  // Vérifiez si la case est vide
-            (currentGrid == grid || grid == -1 || isGridWonOrComplete(node, grid))) {  // Vérifiez les règles de grille
+        // Vérifiez si la case est vide, que la grille n'est ni gagnée ni complète, et si la grille est correcte ou si le joueur peut jouer n'importe où
+        if (node->g[currentGrid][i % 9] == -1 &&
+            (!isGridWonOrComplete(node, currentGrid)) &&
+            (canPlayAnywhere || currentGrid == grid)) {
             tempCount++;
         }
     }
@@ -128,8 +133,10 @@ childNode * nodeChildren(super_morpion *node, int dernierePosition, int *childre
     for (int i = 0; i < 81; i++) {
         int currentGrid = i / 9;
         int posInGrid = i % 9;
-        if (node->g[currentGrid][posInGrid] == -1 &&  // Vérifiez si la case est vide
-            (currentGrid == grid || grid == -1 || isGridWonOrComplete(node, grid))) {  // Vérifiez les règles de grille
+        // Vérifiez si la case est vide, que la grille n'est ni gagnée ni complète, et si la grille est correcte ou si le joueur peut jouer n'importe où
+        if (node->g[currentGrid][posInGrid] == -1 &&
+            (!isGridWonOrComplete(node, currentGrid)) &&
+            (canPlayAnywhere || currentGrid == grid)) {
             childNode newChild;
             newChild.sm = *node;
             newChild.sm.g[currentGrid][posInGrid] = node->trait;
@@ -142,6 +149,7 @@ childNode * nodeChildren(super_morpion *node, int dernierePosition, int *childre
     *childrenCount = index;
     return list;
 }
+
 
 
 // Fonction pour vérifier si un état de jeu est terminal pour l'un ou l'autre des joueurs.

@@ -27,8 +27,9 @@ int main(int argc, char *argv[]) {
     while(!isWinSuperMorpion(&sm) && !isOverSuperMorpion(&sm)) {  // Continuez tant que le jeu n'est pas gagné et pas terminé
         if(sm.trait == ROND){
             int pos = convertMove();  // Obtenez la position du coup du joueur humain
+            printf("la position est : %d\n", pos);
             playSuperMorpion(&sm, pos);  // Jouez le coup
-            dernierePositionAdversaire = pos % 9;  // Mettre à jour la dernière position pour l'adversaire
+            dernierePositionAdversaire = pos;  // Mettre à jour la dernière position pour l'adversaire
             generateSuperMorpionImage(sm);  // Générer l'image
             showSuperMorpion(&sm);
         } else {
