@@ -22,10 +22,18 @@ clean:
 	@rm -rf g.dot
 	@rm -rf g.png
 	
+	@echo "Nettoyage de test"
+	@rm -rf test.exe
+
 tttree: tttree.c ./utils/morpion.c
 	@echo "Le programme tttree.exe a été produit"
 	gcc $(CFLAGS) tttree.c ./utils/morpion.c -o tttree.exe
 
-sm-refresh: ./sm-refresh/sm-refresh.c ./sm-refresh/minimax.c ./utils/super-morpion.c
+sm-refresh: ./sm-refresh/sm-refresh.c ./sm-refresh/minimax.c ./utils/super_morpion.c ./utils/morpion.c
 	@echo "Le programme sm-refresh.exe a été produit"
-	gcc $(CFLAGS) ./sm-refresh/sm-refresh.c ./sm-refresh/minimax.c ./utils/super-morpion.c-o sm-refresh.exe
+	gcc $(CFLAGS) ./sm-refresh/sm-refresh.c ./sm-refresh/minimax.c ./utils/super_morpion.c ./utils/morpion.c -o sm-refresh.exe
+
+test: ./sm-refresh/test.c ./utils/morpion.c ./sm-refresh/minimax.c ./utils/super_morpion.c 
+	@echo "Le programme test.exe a été produit"
+	gcc $(CFLAGS) ./sm-refresh/test.c ./utils/morpion.c ./sm-refresh/minimax.c ./utils/super_morpion.c -o test.exe
+
