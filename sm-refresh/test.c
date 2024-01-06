@@ -4,30 +4,24 @@
 #include <string.h>
 #include <stdlib.h>
 
-void test_playInCompletedOrWonMorpion();
-void setupWinningNode(super_morpion *node);
-
 // Prototypes de vos fonctions de test
 void test_minimax();
 void test_nodeChildren();
 void test_isTerminal();
-void test_evaluate();
 void test_obtenirMeilleurCoup();
-void test_playInCompletedOrWonMorpion();
 
 int main() {
     printf("Début des tests...\n");
-    //test_minimax();
+    test_minimax();
     test_nodeChildren();
-    //test_isTerminal();
-    //test_evaluate();
-    //test_obtenirMeilleurCoup();
-    //test_playInCompletedOrWonMorpion();
+    test_isTerminal();
+    test_obtenirMeilleurCoup();
     printf("Tous les tests sont terminés !\n");
     return 0;
 }
 
 void test_minimax() {
+    printf("Début du test minimax\n");
     // Créer un état de jeu spécifique pour le test
     super_morpion node = newSuperMorpion();
 
@@ -56,7 +50,7 @@ void test_minimax() {
 }
 
 
-/*
+
 void setupWinningNode(super_morpion *node) {
     // Réinitialiser le jeu
     *node = newSuperMorpion();
@@ -111,7 +105,8 @@ void setupOngoingNode(super_morpion *node) {
 }
 
 
-/*void test_isTerminal() {
+void test_isTerminal() {
+    printf("Début du test de isTerminal");
     int tests_passed = 0;
     int total_tests = 3;
     super_morpion node;
@@ -134,138 +129,113 @@ void setupOngoingNode(super_morpion *node) {
         printf("Test isTerminal (filled scenario): FAILED\n");
     }
 
-    // Test 3: Scénario où le jeu est terminé sans gagnant mais avec assez de marqueurs pour l'ordinateur
-    setupFilledNode(&node); // Configurez un état rempli sans alignement gagnant
-    int result = evaluate(&node, ROND);
-    if (result == 1) {
-        printf("Test evaluate (tie with enough markers for ROND): PASSED\n");
+    // Test 3: Scénario de jeu en cours
+    setupOngoingNode(&node);
+    if (isTerminal(&node) == 0) {  // Dans un jeu en cours, isTerminal doit retourner 0
+        printf("Test isTerminal (ongoing scenario): PASSED\n");
         tests_passed++;
     } else {
-        printf("Test evaluate (tie with enough markers for ROND): FAILED\n");
-    }
+        printf("Test isTerminal (ongoing scenario): FAILED\n");
+    }    
 
     // Résumé des tests
     if (tests_passed == total_tests) {
-        printf("All tests for isTerminal passed!\n");
+        printf("Tous les tests de isTerminal ont fonctionné\n");
     } else {
-        printf("Some tests for isTerminal failed: %d out of %d passed.\n", tests_passed, total_tests);
+        printf("Certains des tests de isTerminal n'ont pas fonctionné : %d sur %d ont réussi.\n", tests_passed, total_tests);
     }
-}*/
+}
 
-
-/*void test_evaluate() {
-    int tests_passed = 0;
-    int total_tests = 5;
-    super_morpion node;
-    int result;
-
-    // Test 1: Scénario où le jeu est gagné par le joueur (ROND)
-    setupWinningNode(&node); // Configurez un état gagnant pour ROND
-    result = evaluate(&node, ROND);
-    if (result == 1) {
-        printf("Test evaluate (player wins as ROND): PASSED\n");
-        tests_passed++;
-    } else {
-        printf("Test evaluate (player wins as ROND): FAILED\n");
-    }
-
-    // Test 2: Scénario où le jeu est gagné par l'adversaire (CROIX)
-    setupWinningNode(&node); // Configurez un état gagnant pour CROIX
-    result = evaluate(&node, CROIX);
-    if (result == -1) {
-        printf("Test evaluate (opponent wins as CROIX): PASSED\n");
-        tests_passed++;
-    } else {
-        printf("Test evaluate (opponent wins as CROIX): FAILED\n");
-    }
-
-    // Test 3: Scénario où le jeu est terminé sans gagnant mais avec assez de marqueurs pour l'ordinateur
-    setupFilledNode(&node); // Configurez un état rempli sans alignement gagnant
-    // Assurez-vous que ROND a 5 marqueurs ou plus
-    node.g[1][0] = ROND;
-    node.g[1][2] = ROND;
-    node.g[2][0] = ROND;
-    node.g[2][2] = ROND;
-    result = evaluate(&node, ROND);
-    if (result == 1) {
-        printf("Test evaluate (tie with enough markers for ROND): PASSED\n");
-        tests_passed++;
-    } else {
-        printf("Test evaluate (tie with enough markers for ROND): FAILED\n");
-    }
-
-    // Test 4: Scénario où le jeu est terminé sans gagnant et avec moins de marqueurs pour l'ordinateur
-    setupFilledNode(&node); // Configurez un état rempli sans alignement gagnant
-    // Assurez-vous que ROND a moins de 5 marqueurs
-    node.g[1][0] = CROIX;
-    node.g[1][2] = CROIX;
-    node.g[2][0] = CROIX;
-    node.g[2][2] = CROIX;
-    result = evaluate(&node, ROND);
-    if (result == -1) {
-        printf("Test evaluate (tie with not enough markers for ROND): PASSED\n");
-        tests_passed++;
-    } else {
-        printf("Test evaluate (tie with not enough markers for ROND): FAILED\n");
-    }
-
-    // Test 5: Scénario neutre où le jeu n'est pas encore terminé
-    setupOngoingNode(&node); // Configurez un état de jeu en cours
-    result = evaluate(&node, ROND);
-    if (result == 0) {
-        printf("Test evaluate (neutral ongoing game): PASSED\n");
-        tests_passed++;
-    } else {
-        printf("Test evaluate (neutral ongoing game): FAILED\n");
-    }
-
-    // Résumé des tests
-    if (tests_passed == total_tests) {
-        printf("All tests for evaluate passed!\n");
-    } else {
-        printf("Some tests for evaluate failed: %d out of %d passed.\n", tests_passed, total_tests);
-    }
-}*/
 
 void test_nodeChildren() {
-    // Créer un état de jeu spécifique pour le test
-    super_morpion node = newSuperMorpion();
-    
-    // Configurer un scénario de jeu spécifique
-    node.g[4][0] = ROND;  // Supposons que la grille 5 a déjà quelques coups joués
-    node.g[4][1] = ROND;
-    node.g[4][2] = ROND;
-    node.g[0][0] = ROND;  // Supposons un coup joué dans la grille 1
-    node.trait = CROIX;   // C'est au tour de CROIX de jouer
-    int dernierePositionAdversaire = 26;  // Le dernier coup joué par ROND était dans la grille 1
+    printf("Début du test de nodeChildren\n");
+    int tests_passed = 0;
+    int total_tests = 3;
 
-    int childrenCount;
-    childNode *children = nodeChildren(&node, dernierePositionAdversaire, &childrenCount);
+    // Test 1: Jeu n'a pas commencé (dernierePosition = -1)
+    {
+        super_morpion node = newSuperMorpion();
+        node.trait = CROIX; // C'est au tour de CROIX de jouer
+        int dernierePositionAdversaire = -1; // Aucun coup joué précédemment
 
-    // Définir le nombre attendu d'enfants pour ce scénario spécifique
-    int expectedChildrenCount = 8;  // Ajuster selon la logique du jeu et le scénario configuré
+        int childrenCount;
+        childNode *children = nodeChildren(&node, dernierePositionAdversaire, &childrenCount);
 
-    // Afficher tous les enfants (coup possibles) générés
-    printf("Affichage des %d enfants générés :\n", childrenCount);
-    for (int i = 0; i < childrenCount; i++) {
-        printf("Enfant %d:\n", i + 1);
-        showSuperMorpion(&children[i].sm); // Utiliser la fonction showSuperMorpion pour afficher chaque enfant
+        // Dans ce scénario, tous les coups sont possibles
+        int expectedChildrenCount = 81 - 0; // Ajuster en fonction de la configuration du jeu
+
+        if (childrenCount == expectedChildrenCount) {
+            printf("Test nodeChildren (jeu n'a pas commencé): PASSED\n");
+            tests_passed++;
+        } else {
+            printf("Test nodeChildren (jeu n'a pas commencé): FAILED\n");
+            printf("On attendait %d children, mais on a eu %d children\n", expectedChildrenCount, childrenCount);
+        }
+
+        free(children);
     }
 
-    // Vérifier si le nombre d'enfants générés est égal au nombre attendu
-    if (childrenCount == expectedChildrenCount) {
-        printf("Test nodeChildren: PASSED\n");
+    // Test 2: Jouer dans une grille spécifique
+    {
+        super_morpion node = newSuperMorpion();
+        node.g[4][0] = ROND;  // Supposons que la grille 5 a déjà quelques coups joués
+        node.trait = CROIX;   // C'est au tour de CROIX de jouer
+        int dernierePositionAdversaire = 40;  // Le dernier coup joué par ROND était dans la grille 5
+
+        int childrenCount;
+        childNode *children = nodeChildren(&node, dernierePositionAdversaire, &childrenCount);
+
+        // Ici, nous nous attendons à ce que tous les coups valides dans la grille 5 soient comptés
+        int expectedChildrenCount = 9 - 1; // Ajuster en fonction de la configuration du jeu
+
+        if (childrenCount == expectedChildrenCount) {
+            printf("Test nodeChildren (jouer dans une grille spécifique): PASSED\n");
+            tests_passed++;
+        } else {
+            printf("Test nodeChildren (jouer dans une grille spécifique): FAILED\n");
+            printf("On attendait %d children, mais on a eu %d children\n", expectedChildrenCount, childrenCount);
+        }
+
+        free(children);
+    }
+
+    // Test 3: Grille déjà gagnée
+    {
+        super_morpion node = newSuperMorpion();
+        
+        // Configurer une grille comme déjà gagnée
+        node.g[3][0] = node.g[3][1] = node.g[3][2] = CROIX;
+        node.trait = ROND;   // C'est au tour de ROND de jouer
+        int dernierePositionAdversaire = 30;  // Le dernier coup joué par CROIX était dans la grille 4
+
+        int childrenCount;
+        childNode *children = nodeChildren(&node, dernierePositionAdversaire, &childrenCount);
+
+        // Dans ce cas, le joueur ne peut pas jouer dans la grille 4
+        int expectedChildrenCount = 81 - 9; // Ajuster en fonction de la configuration du jeu
+
+        if (childrenCount == expectedChildrenCount) {
+            printf("Test nodeChildren (grille déjà gagnée): PASSED\n");
+            tests_passed++;
+        } else {
+            printf("Test nodeChildren (grille déjà gagnée): FAILED\n");
+            printf("On attendait %d children, mais on a eu %d children\n", expectedChildrenCount, childrenCount);
+        }
+
+        free(children);
+    }
+
+    // Résumé des tests
+    if (tests_passed == total_tests) {
+        printf("Tous les tests ont fonctionné\n");
     } else {
-        printf("Test nodeChildren: FAILED\n");
-        printf("Expected %d children, but got %d children\n", expectedChildrenCount, childrenCount);
+        printf("Certains tests n'ont pas fonctionné : %d sur %d ont réussi.\n", tests_passed, total_tests);
     }
-
-    // Libérer la mémoire allouée pour les enfants
-    free(children);
 }
 
 
 void test_obtenirMeilleurCoup() {
+    printf("Début du test de obtenirMeilleurCoup");
     // Créer un état de jeu spécifique pour le test
     super_morpion node = newSuperMorpion();
 
@@ -273,7 +243,7 @@ void test_obtenirMeilleurCoup() {
     node.g[0][0] = ROND;  // Supposons que ROND est l'ordinateur
     node.g[0][1] = ROND;    // Case vide où l'ordinateur peut gagner
     node.trait = ROND;    // C'est au tour de l'ordinateur de jouer
-    int dernierePositionAdversaire = 26;  // Supposons que la dernière position jouée est 4
+    int dernierePositionAdversaire = 0;  // Supposons que la dernière position jouée est 4
 
     // Définir une profondeur de recherche
     int depth = 3;  // Profondeur suffisante pour que Minimax trouve le meilleur coup
@@ -301,25 +271,3 @@ void test_obtenirMeilleurCoup() {
 }
 
 
-
-/*
-void test_playInCompletedOrWonMorpion() {
-    super_morpion node = newSuperMorpion();
-    // Configurez un scénario où un morpion spécifique est complet ou gagné
-    // Par exemple, remplissez complètement le morpion 4
-    for (int i = 0; i < 9; i++) {
-        node.g[4][i] = i % 2 == 0 ? ROND : CROIX;
-    }
-
-    dernierePositionAdversaire = 4; // Le joueur est envoyé au morpion 4
-
-    // Simulez un coup joué dans un autre morpion valide
-    playSuperMorpion(&node, 11);  // Essayez de jouer dans le morpion 1, position 1
-
-    // Vérifiez que le coup a été joué avec succès
-    if (node.g[1][1] == ROND) {
-        printf("Test playInCompletedOrWonMorpion: PASSED\n");
-    } else {
-        printf("Test playInCompletedOrWonMorpion: FAILED\n");
-    }
-}*/

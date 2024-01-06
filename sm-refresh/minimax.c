@@ -11,8 +11,11 @@
 #define INFINITY 10000  // Valeur arbitraire représentant l'infini
 #define NEG_INFINITY -10000  // Valeur arbitraire représentant moins l'infini
 
-
-childNode obtenirMeilleurCoup(super_morpion *node, int depth, int traitOrdi, int dernierePosition) {
+childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernierePosition) {
+    #ifdef DEBUG
+    printf("Recherche du meilleur coup pour la position %d\n", dernierePosition);
+    #endif
+    
     int meilleurScore = (traitOrdi == node->trait) ? NEG_INFINITY : INFINITY;
     childNode meilleurCoup; // Déclarer une variable pour stocker le meilleur coup
     memset(&meilleurCoup, 0, sizeof(meilleurCoup)); // Initialiser meilleurCoup
@@ -21,7 +24,7 @@ childNode obtenirMeilleurCoup(super_morpion *node, int depth, int traitOrdi, int
     childNode *children = nodeChildren(node, dernierePosition, &childrenCount); // Générer les enfants du noeud actuel
 
     if (children == NULL) {
-        fprintf(stderr, "Erreur pour 'children' dans obtenirMeilleurCoup.\n");
+        fprintf(stderr, "Erreur pour 'children' dans getBestMove.\n");
         meilleurCoup.sm = *node;  // Retourner l'état actuel en cas d'erreur
         return meilleurCoup;
     }
@@ -36,13 +39,19 @@ childNode obtenirMeilleurCoup(super_morpion *node, int depth, int traitOrdi, int
     }
 
     free(children);
+    #ifdef DEBUG
+    printf("Meilleur coup trouvé: position=%d\n", meilleurCoup.dernierePosition);
+    #endif
     return meilleurCoup;
 }
 
 
 
-
 int minimax(childNode node, int depth, int traitOrdi) {
+    #ifdef DEBUG
+    printf("Entrée dans minimax: depth=%d, traitOrdi=%d\n", depth, traitOrdi);
+    #endif
+    
     if (depth == 0 || isTerminal(&node.sm)) {
         return evaluation_partie(node.sm, node.dernierePosition);  // Utilisez la dernière position stockée dans node
     }
@@ -73,7 +82,10 @@ int minimax(childNode node, int depth, int traitOrdi) {
     }
 
     free(children); // Libérer la mémoire allouée pour les enfants
-    return value; // Retourner la valeur calculée
+    #ifdef DEBUG
+    printf("Sortie de minimax: valeur=%d\n", value);
+    #endif
+    return value;
 }
 
 
@@ -124,6 +136,10 @@ childNode * nodeChildren(super_morpion *node, int dernierePosition, int *childre
         return NULL;
     }
 
+    #ifdef DEBUG
+    printf("Génération des enfants pour nodeChildren. Nombre d'enfants attendus: %d\n", tempCount);
+    #endif
+    
     // Générez et stockez les enfants valides
     int index = 0;
     for (int i = 0; i < 81; i++) {
@@ -141,6 +157,10 @@ childNode * nodeChildren(super_morpion *node, int dernierePosition, int *childre
             list[index++] = newChild;
         }
     }
+
+    #ifdef DEBUG
+    printf("Nombre d'enfants générés: %d\n", index);
+    #endif
 
     *childrenCount = index;
     return list;
@@ -170,32 +190,3 @@ int isTerminal(super_morpion *node) {
 }
 
 
-/*int evaluate(super_morpion *node, int traitOrdi) {
-    // Vérifier si le jeu est gagné par l'ordinateur
-    if (isWinSuperMorpion(node) && node->trait != traitOrdi) { //le trait passe automatiquement au joueur adverse
-        return 1; // Retourner +1 pour une victoire de l'ordinateur
-    }
-    // Vérifier si le jeu est gagné par l'adversaire
-    else if (isWinSuperMorpion(node) && node->trait == traitOrdi) {
-        return -1; // Retourner -1 pour une défaite de l'ordinateur
-    }
-    // Vérifier si le jeu est terminé mais sans alignement (vérifier le nombre de marqueurs)
-    else if (isOverSuperMorpion(node)) {
-        int count = 0; // Compter le nombre de marqueurs de l'ordinateur
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (node->g[i][j] == traitOrdi) {
-                    count++;
-                }
-            }
-        }
-
-        if (count >= 5) {
-            return 1; // Retourner +1 si l'ordinateur a 5 marqueurs ou plus
-        } else {
-            return -1; // Retourner -1 si l'ordinateur a moins de 5 marqueurs
-        }
-    }
-
-    return 0; // Retourner 0 en cas d'égalité
-}*/

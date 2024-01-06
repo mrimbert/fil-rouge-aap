@@ -4,6 +4,12 @@
 #include "minimax.h"
 
 int main(int argc, char *argv[]) {
+
+    // Récupérer et gérer la variable d'environnement SMPATH
+    char *smPath = getenv("SMPATH");
+    char *imagePath = (smPath != NULL) ? smPath : "g.png";  // Utilisez SMPATH si défini, sinon "g.png"
+    printf("imagePath : %s\n", imagePath);
+    
     int horizon;
     int dernierePositionAdversaire = -1;  // Supposons qu'au début le joueur peut jouer n'importe où
     int traitOrdi = CROIX;  // Supposons que l'ordinateur joue avec les croix
@@ -27,13 +33,12 @@ int main(int argc, char *argv[]) {
     while(!isWinSuperMorpion(&sm) && !isOverSuperMorpion(&sm)) {  // Continuez tant que le jeu n'est pas gagné et pas terminé
         if(sm.trait == ROND){
             int pos = convertMove();  // Obtenez la position du coup du joueur humain
-            printf("la position est : %d\n", pos);
             playSuperMorpion(&sm, pos);  // Jouez le coup
             dernierePositionAdversaire = pos;  // Mettre à jour la dernière position pour l'adversaire
             generateSuperMorpionImage(sm);  // Générer l'image
             showSuperMorpion(&sm);
         } else {
-            childNode meilleurCoup = obtenirMeilleurCoup(&sm, horizon, traitOrdi, dernierePositionAdversaire);  // Calculer le meilleur coup pour l'ordinateur
+            childNode meilleurCoup = getBestMove(&sm, horizon, traitOrdi, dernierePositionAdversaire);  // Calculer le meilleur coup pour l'ordinateur
             playSuperMorpion(&sm, meilleurCoup.dernierePosition);
            // sm = meilleurCoup.sm;  // Mettre à jour l'état du jeu avec le meilleur coup
             dernierePositionAdversaire = meilleurCoup.dernierePosition;  // Mettre à jour la dernière position en fonction du coup de l'ordinateur
