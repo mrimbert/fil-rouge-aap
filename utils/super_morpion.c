@@ -351,6 +351,11 @@ int evaluation_partie(super_morpion sm, int position) {
     morpion_principal.trait = sm.trait;
     evaluation -= isWin(morpion_principal) * 5000;
     evaluation += evaluation_grille(morpion_principal) * 150;
+    
+    #ifdef DEBUG
+    printf("Évaluation de la partie: %d\n", evaluation);
+    #endif
+
     return evaluation;
 }
 
@@ -454,18 +459,34 @@ int convertMove() {
 int isOverSuperMorpion(super_morpion *sm) {
     // Parcourir chaque grille du super-morpion
     for (int i = 0; i < 9; i++) {
-        // Parcourir chaque case de la grille courante
-        for (int j = 0; j < 9; j++) {
-            // Si une case est vide, le jeu n'est pas encore terminé
-            if (sm->g[i][j] == -1) {
-                return 0; // Retourner 0 indique que le jeu n'est pas terminé
-            }
+        morpion m;
+        memcpy(m.g, sm->g[i], sizeof(m.g)); // Copier la grille courante dans une structure morpion
+
+        // Vérifier si la grille est complète
+        if (isOver(m)) {
+            continue; // Si la grille est complète, passer à la suivante
         }
+
+        // Vérifier si la grille est gagnée par ROND
+        m.trait = ROND;
+        if (isWin(m)) {
+            continue; // Si ROND a gagné la grille, passer à la suivante
+        }
+
+        // Vérifier si la grille est gagnée par CROIX
+        m.trait = CROIX;
+        if (isWin(m)) {
+            continue; // Si CROIX a gagné la grille, passer à la suivante
+        }
+
+        // Si on trouve une grille qui n'est ni gagnée par ROND, ni gagnée par CROIX, ni complète, le jeu n'est pas encore terminé
+        return 0; // Retourner 0 indique que le jeu n'est pas terminé
     }
     
-    // Si toutes les cases de toutes les grilles sont remplies, le jeu est terminé
+    // Si toutes les grilles sont soit gagnées par ROND, soit gagnées par CROIX, soit complètes, le jeu est terminé
     return 1; // Retourner 1 indique que le jeu est terminé
 }
+
 
 void showSuperMorpion(super_morpion *sm) {
     printf("État du Super Morpion :\n");
