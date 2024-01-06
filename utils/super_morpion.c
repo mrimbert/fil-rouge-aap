@@ -435,8 +435,7 @@ int convertMove() {
 
     // Convertir la ligne de 1, 2, 3 à 0, 1, 2 (soustraire 1)
     ligne -= 1;  // Changez ici de '1' à 1
-    printf("grille : %d, colonne : %d, ligne : %d\n", grille, colonne, ligne);
-
+  
     // Vérifier la validité de l'entrée
     if(grille < 1 || grille > 9 || colonne < 0 || colonne > 2 || ligne < 0 || ligne > 2) {
         printf("Coup invalide\n");
@@ -446,7 +445,6 @@ int convertMove() {
 
     // Calculer la position linéaire
     pos = (grille - 1) * 9 + ligne * 3 + colonne;
-    printf("Position renvoyée : %d \n", pos);
 
     return pos;
 }
