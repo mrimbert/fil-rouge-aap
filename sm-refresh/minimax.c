@@ -12,6 +12,7 @@
 #define NEG_INFINITY -10000  // Valeur arbitraire représentant moins l'infini
 
 childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernierePosition) {
+	morpion Mtemp = newMorpion();
     #ifdef DEBUG
     printf("Recherche du meilleur coup pour la position %d\n", dernierePosition);
     #endif
@@ -33,8 +34,21 @@ childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernier
         int currentScore = minimax(children[i], depth - 1, traitOrdi);
         if ((traitOrdi == node->trait && currentScore > meilleurScore) ||
             (traitOrdi != node->trait && currentScore < meilleurScore)) {
+        
+        memcpy(Mtemp.g, node->g[(children[i].dernierePosition)/9], sizeof(Mtemp.g));
+        
+        
+        /*
+        printf("La dernière position est : %d \n", children[i].dernierePosition);
+        printf("La grille est : %d \n", (children[i].dernierePosition)/9);
+        printMorpion(Mtemp);
+        */
+        
+        if(isWin(Mtemp)==0){
+        
             meilleurScore = currentScore;
             meilleurCoup = children[i];
+            }
         }
     }
 
