@@ -35,10 +35,6 @@ childNode obtenirMeilleurCoup(super_morpion *node, int depth, int traitOrdi, int
         }
     }
 
-    // Après avoir sélectionné le meilleur coup, affichez le cadran où le prochain coup doit être joué
-    int prochainCadran = meilleurCoup.dernierePosition % 9; // Calculer le cadran pour le prochain coup
-    printf("Le prochain coup devra être joué dans le cadran %d.\n", prochainCadran); // Les cadrans sont généralement numérotés de 1 à 9
-
     free(children);
     return meilleurCoup;
 }
