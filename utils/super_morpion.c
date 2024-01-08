@@ -93,7 +93,7 @@ void generateSuperMorpionImage(super_morpion sm) {
     return;
   }
 
-  // Écriture du contenu DOT représentant le morpion dans le fichier
+  // Écriture du contenu DOT représentant le super-morpion dans le fichier
   fprintf(file, "digraph {\n");
   fprintf(file, " a0 [shape=none label=<\n");
   fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" "
@@ -169,7 +169,7 @@ void generateSuperMorpionImage(super_morpion sm) {
     }
     if (i != 8) {
       memcpy(tempMorpion.g, sm.g[i+1], sizeof(tempMorpion.g));
-    
+
       if(isWin(tempMorpion) == -1){
       	fprintf(file, "<TD bgcolor=\"black\"> \n");
       } else {
@@ -508,4 +508,57 @@ void showSuperMorpion(super_morpion *sm) {
         }
         printf("------|-------|------\n"); // Séparateur de ligne de grilles
     }
+}
+
+super_morpion toSuperMorpion(char * play){
+	super_morpion sm = newSuperMorpion();
+	int i = 0;
+	int grille = 0;
+	int pos = 0;
+	
+	while(play[i] != ' '){
+		if(play[i] == 'x'){
+			sm.g[pos/9][pos%9] = CROIX;
+			pos++;
+			//printf("Position %d \n", i+decalage);
+		} 
+		if(play[i] == 'o'){
+			sm.g[pos/9][pos%9] = ROND;
+			pos++;
+			//printf("Position %d \n", i+decalage);
+		}
+		//printf("On a : %c\n", play[i]);
+		
+		if(play[i] == 'O'){
+			sm.g[pos/9][0] = ROND;
+			sm.g[pos/9][1] = ROND;
+			sm.g[pos/9][2] = ROND;
+			pos+= 9;
+		} else{
+		
+		if(play[i] == 'X'){
+			sm.g[pos/9][0] = CROIX;
+			sm.g[pos/9][1] = CROIX;
+			sm.g[pos/9][2] = CROIX;
+			pos+= 9;
+		}}
+		
+		if(play[i] <= 56) {
+			pos += play[i]-48;
+			//printf("Position = %d \n", decalage);
+		}
+		printf("%c : Position = %d \n", play[i],pos);
+		printf("Tableau = %d \n", pos/8);
+		showSuperMorpion(&sm);
+		i++;
+	}
+	
+	if(play[i+4] == 'o'){
+		sm.trait = ROND;
+	}
+	if(play[i+4] == 'x'){
+		sm.trait = CROIX;
+	}
+	
+	return sm;
 }

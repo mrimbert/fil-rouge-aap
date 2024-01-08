@@ -81,7 +81,7 @@ morpion toMorpion(char * play){
 
 
 int isWin(morpion M){
-	if(M.trait == ROND){
+	//Vérification des victoires de CROIX
 		if(M.g[0] == CROIX && M.g[1] == CROIX && M.g[2] == CROIX){
 			return 1;
 		}
@@ -106,9 +106,8 @@ int isWin(morpion M){
 		if(M.g[4] == CROIX && M.g[0] == CROIX && M.g[8] == CROIX){
 			return 1;
 		}
-		return 0;
-	}
-	if(M.trait == CROIX){
+	
+	//Vérification des victoires de ROND
 		if(M.g[0] == ROND && M.g[1] == ROND && M.g[2] == ROND){
 			return -1;
 		}
@@ -134,8 +133,6 @@ int isWin(morpion M){
 			return -1;
 		}
 		return 0;
-	}
-	return 0;
 }
 
 
