@@ -6,7 +6,7 @@ Projet réalisé par : Jinhong Zhang, Mathis Rimbert, Mohammed-Ayoub Bouzid, Mar
 ## Programme 1 tttree :
 Pour exécuter le fichier de test associé au programme 1 et fourni dans le cahier des charges veuillez rentrer les commandes :  *chmod a+x ./test_tttree.sh* et *./test_tttree.sh*
 
-## Programme 1 sm-refresh :
+## Programme 2 sm-refresh :
 Pour exécuter le fichier de test associé au programme 2 et détaillé dans le compte-rendu fourni avec l'archive, veuillez rentrer les commandes : *make test.exe* et *./test.exe*
 
 
