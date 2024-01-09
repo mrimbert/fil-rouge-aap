@@ -13,6 +13,7 @@ Pour sortir du mode DEBUG : exécuter dans la console **(commande valable unique
 
 Pour modifier le chemin de génération de l'image : exécuter dans la console **(commande valable uniquement sous Linux)** la commande *export PATH="Votre_Chemin"*, puis exécuter le programme normalement
 
-##Programme 3 : 
+## Programme 3 sm-bot :
+Lors de l'exécution du programme merci de rentrer l'état actuel du super-morpion au format FEN (voir cahier des charges) ainsi que le temps restant **en secondes** pour jouer. La profondeur de l'algorithme négamax dépend du temps restant selon une règle définie dans le compte-rendu associé à cette archive.
 
 
