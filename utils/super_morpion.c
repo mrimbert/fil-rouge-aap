@@ -6,6 +6,13 @@
 #include <limits.h>
 int cadranprev = -1;
 
+// Récupérer et gérer la variable d'environnement SMPATH
+char * smPath;
+
+void imgPathUpdater(char * s){
+  strcpy(smPath,s);
+}
+
 super_morpion newSuperMorpion() {
   super_morpion sm = {{{-1, -1, -1, -1, -1, -1, -1, -1, -1},
                        {-1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -70,6 +77,9 @@ void playSuperMorpion(super_morpion *sm, int pos) {
     cadranprev = -1;
   } else {
     cadranprev = j;
+    memcpy(grille.g, sm->g[cadranprev], sizeof(grille.g));
+    if(abs(isWin(grille)) == 1) cadranprev = -1;
+
   }
   printf("Le prochain coup devra être jouée dans le cadran %d \n", cadranprev+1);
 }
@@ -82,10 +92,17 @@ void generateSuperMorpionImage(super_morpion sm) {
   char fileName[100], pngFileName[100], command[200];
 
   // Créer un nom de fichier unique pour le fichier DOT et le fichier PNG
+  if(smPath == NULL){
   snprintf(fileName, sizeof(fileName),
            "./g.dot");
   snprintf(pngFileName, sizeof(pngFileName),
            "./g.png");
+  } else{
+    snprintf(fileName, sizeof(fileName),
+           ".%s/g.dot",smPath);
+    snprintf(pngFileName, sizeof(pngFileName),
+           ".%s/g.png", smPath);
+  }
 
   FILE *file = fopen(fileName, "w");
   if (file == NULL) {
@@ -190,9 +207,14 @@ void generateSuperMorpionImage(super_morpion sm) {
   fprintf(file, ">];");
   fprintf(file, "}\n");
   fclose(file);
+  if(smPath == NULL){
   snprintf(command, sizeof(command),
            "dot %s -Tpng -o g.png",
-           fileName);
+           fileName); } else {
+            snprintf(command, sizeof(command),
+           "dot %s -Tpng -o %s/g.png",
+           fileName,smPath);
+           }
   system(command);
 }
 
@@ -352,9 +374,7 @@ int evaluation_partie(super_morpion sm, int position) {
     evaluation -= isWin(morpion_principal) * 5000;
     evaluation += evaluation_grille(morpion_principal) * 150;
     
-    #ifdef DEBUG
-    printf("Évaluation de la partie: %d\n", evaluation);
-    #endif
+    if(getenv("DEBUG") != NULL) printf("Évaluation de la partie: %d\n", evaluation);
 
     return evaluation;
 }

@@ -21,3 +21,4 @@ int includesZero(morpion M);
 int convertMove();
 int isOverSuperMorpion(super_morpion *sm);
 void showSuperMorpion(super_morpion *sm);
+void imgPathUpdater(char * s);
