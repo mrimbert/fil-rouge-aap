@@ -530,53 +530,53 @@ void showSuperMorpion(super_morpion *sm) {
     }
 }
 
-super_morpion toSuperMorpion(char * play){
+super_morpion toSuperMorpion(char * FEN, char* trait){
 	super_morpion sm = newSuperMorpion();
 	int i = 0;
 	int grille = 0;
 	int pos = 0;
 	
-	while(play[i] != ' '){
-		if(play[i] == 'x'){
+	while(FEN[i] != '\0'){
+		if(FEN[i] == 'x'){
 			sm.g[pos/9][pos%9] = CROIX;
 			pos++;
 			//printf("Position %d \n", i+decalage);
 		} 
-		if(play[i] == 'o'){
+		if(FEN[i] == 'o'){
 			sm.g[pos/9][pos%9] = ROND;
 			pos++;
 			//printf("Position %d \n", i+decalage);
 		}
 		//printf("On a : %c\n", play[i]);
 		
-		if(play[i] == 'O'){
+		if(FEN[i] == 'O'){
 			sm.g[pos/9][0] = ROND;
 			sm.g[pos/9][1] = ROND;
 			sm.g[pos/9][2] = ROND;
 			pos+= 9;
 		} else{
 		
-		if(play[i] == 'X'){
+		if(FEN[i] == 'X'){
 			sm.g[pos/9][0] = CROIX;
 			sm.g[pos/9][1] = CROIX;
 			sm.g[pos/9][2] = CROIX;
 			pos+= 9;
 		}}
 		
-		if(play[i] <= 56) {
-			pos += play[i]-48;
+		if(FEN[i] <= 56) {
+			pos += FEN[i]-48;
 			//printf("Position = %d \n", decalage);
 		}
-		printf("%c : Position = %d \n", play[i],pos);
-		printf("Tableau = %d \n", pos/8);
-		showSuperMorpion(&sm);
+		//printf("%c : Position = %d \n", play[i],pos);
+		//printf("Tableau = %d \n", pos/8);
+		//showSuperMorpion(&sm);
 		i++;
 	}
 	
-	if(play[i+4] == 'o'){
+	if(trait[0] == 'o'){
 		sm.trait = ROND;
 	}
-	if(play[i+4] == 'x'){
+	if(trait[0] == 'x'){
 		sm.trait = CROIX;
 	}
 	
