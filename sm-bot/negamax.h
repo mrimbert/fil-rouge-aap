@@ -1,4 +1,4 @@
-#include "./utils/super_morpion.h"
+#include "../utils/super_morpion.h"
 
 // Structure pour représenter un enfant avec son état de jeu et la dernière position jouée
 typedef struct {
