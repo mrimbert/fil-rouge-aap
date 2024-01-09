@@ -12,9 +12,7 @@
 #define NEG_INFINITY -10000  // Valeur arbitraire représentant moins l'infini
 
 childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernierePosition) {
-    #ifdef DEBUG
-    printf("Recherche du meilleur coup pour la position %d\n", dernierePosition);
-    #endif
+   if(getenv("DEBUG") != NULL) printf("Recherche du meilleur coup pour la position %d\n", dernierePosition);
     
     int meilleurScore = (traitOrdi == node->trait) ? NEG_INFINITY : INFINITY;
     childNode meilleurCoup; // Déclarer une variable pour stocker le meilleur coup
@@ -39,18 +37,14 @@ childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernier
     }
 
     free(children);
-    #ifdef DEBUG
-    printf("Meilleur coup trouvé: position=%d\n", meilleurCoup.dernierePosition);
-    #endif
+    if(getenv("DEBUG") != NULL) printf("Meilleur coup trouvé: position=%d\n", meilleurCoup.dernierePosition);
     return meilleurCoup;
 }
 
 
 
 int minimax(childNode node, int depth, int traitOrdi) {
-    #ifdef DEBUG
-    printf("Entrée dans minimax: depth=%d, traitOrdi=%d\n", depth, traitOrdi);
-    #endif
+    if(getenv("DEBUG") != NULL) printf("Entrée dans minimax: depth=%d, traitOrdi=%d\n", depth, traitOrdi);
     
     if (depth == 0 || isTerminal(&node.sm)) {
         return evaluation_partie(node.sm, node.dernierePosition);  // Utilisez la dernière position stockée dans node
@@ -82,9 +76,7 @@ int minimax(childNode node, int depth, int traitOrdi) {
     }
 
     free(children); // Libérer la mémoire allouée pour les enfants
-    #ifdef DEBUG
-    printf("Sortie de minimax: valeur=%d\n", value);
-    #endif
+    if(getenv("DEBUG") != NULL) printf("Sortie de minimax: valeur=%d\n", value);
     return value;
 }
 
@@ -136,9 +128,8 @@ childNode * nodeChildren(super_morpion *node, int dernierePosition, int *childre
         return NULL;
     }
 
-    #ifdef DEBUG
-    printf("Génération des enfants pour nodeChildren. Nombre d'enfants attendus: %d\n", tempCount);
-    #endif
+    if(getenv("DEBUG") != NULL) printf("Génération des enfants pour nodeChildren. Nombre d'enfants attendus: %d\n", tempCount);
+    
     
     // Générez et stockez les enfants valides
     int index = 0;
@@ -158,9 +149,7 @@ childNode * nodeChildren(super_morpion *node, int dernierePosition, int *childre
         }
     }
 
-    #ifdef DEBUG
-    printf("Nombre d'enfants générés: %d\n", index);
-    #endif
+    if(getenv("DEBUG") != NULL) printf("Nombre d'enfants générés: %d\n", index);
 
     *childrenCount = index;
     return list;

@@ -8,4 +8,4 @@ typedef struct {
 int minimax(childNode node, int depth, int traitOrdi);
 childNode * nodeChildren(super_morpion *node, int dernierePosition, int *childrenCount);
 int isTerminal(super_morpion *node);
-childNode obtenirMeilleurCoup(super_morpion *node, int depth, int traitOrdi, int dernierePosition);
+childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernierePosition);

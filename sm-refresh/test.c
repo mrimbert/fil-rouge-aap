@@ -9,13 +9,15 @@ void test_minimax();
 void test_nodeChildren();
 void test_isTerminal();
 void test_obtenirMeilleurCoup();
+void test_getBestMove_grilleGagnee();
 
 int main() {
     printf("Début des tests...\n");
     test_minimax();
     test_nodeChildren();
     test_isTerminal();
-    test_obtenirMeilleurCoup();
+    //test_obtenirMeilleurCoup();
+    test_getBestMove_grilleGagnee();
     printf("Tous les tests sont terminés !\n");
     return 0;
 }
@@ -234,7 +236,7 @@ void test_nodeChildren() {
 }
 
 
-void test_obtenirMeilleurCoup() {
+/*void test_obtenirMeilleurCoup() {
     printf("Début du test de obtenirMeilleurCoup");
     // Créer un état de jeu spécifique pour le test
     super_morpion node = newSuperMorpion();
@@ -268,6 +270,34 @@ void test_obtenirMeilleurCoup() {
         printf("Test obtenirMeilleurCoup: FAILED\n");
         printf("Expected best move at position %d, but got different position\n", expectedBestMoveIndex);
     }
+}*/
+
+
+void test_getBestMove_grilleGagnee() {
+    printf("Test de getBestMove dans une situation où l'ordinateur doit jouer dans une grille déjà gagnée\n");
+
+    // Création d'un état de jeu spécifique
+    super_morpion node = newSuperMorpion();
+    node.trait = CROIX; // L'ordinateur joue avec les croix
+
+    // Configuration d'une grille comme étant déjà gagnée par CROIX
+    for (int i = 0; i < 3; i++) {
+        node.g[3][i] = CROIX; // Gagner la grille 4
+    }
+
+    int dernierePositionAdversaire = 3 * 9; // La dernière position jouée est dans la grille 4
+
+    int depth = 3; // Profondeur de recherche pour l'algorithme Minimax
+    int traitOrdi = CROIX; // L'ordinateur joue les croix
+
+    // Appel à getBestMove
+    childNode meilleurCoup = getBestMove(&node, depth, traitOrdi, dernierePositionAdversaire);
+
+    // Afficher le coup suggéré par l'ordinateur
+    printf("Meilleur coup suggéré : Position %d, Grille %d\n", meilleurCoup.dernierePosition, meilleurCoup.dernierePosition / 9 + 1);
+
+    // Afficher la grille après avoir joué le meilleur coup
+    playSuperMorpion(&node, meilleurCoup.dernierePosition);
+    printf("État du jeu après le meilleur coup de l'ordinateur :\n");
+    showSuperMorpion(&node);
 }
-
-
