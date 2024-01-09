@@ -35,7 +35,7 @@ test.exe: ./sm-refresh/test.o ./utils/morpion.o ./sm-refresh/minimax.o ./utils/s
 	@echo "Le programme test.exe a été produit"
 	gcc -Wall -o $@ $^
 	
-sm-bot.exe : sm-bot.o negamax.o ./utils/super_morpion.o ./utils/morpion.o
+sm-bot.exe : ./sm-bot/sm-bot.o ./sm-bot/negamax.o ./utils/super_morpion.o ./utils/morpion.o
 	@echo "Le programme sm-bot.exe a été produit"
 	gcc -Wall -o $@ $^
 
