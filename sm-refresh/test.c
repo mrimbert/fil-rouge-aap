@@ -8,8 +8,6 @@
 void test_minimax();
 void test_nodeChildren();
 void test_isTerminal();
-void test_obtenirMeilleurCoup();
-void test_getBestMove_grilleGagnee();
 
 int main() {
     printf("Début des tests...\n");
@@ -26,22 +24,22 @@ void test_minimax() {
     super_morpion node = newSuperMorpion();
 
     // Configurer un scénario de jeu où l'ordinateur peut prendre une décision avantageuse
-    node.g[0][0] = ROND;  // Supposons que ROND est l'ordinateur
+    node.g[0][0] = ROND;  
     node.g[0][1] = ROND;
-    node.g[0][2] = -1;    // Case vide où l'ordinateur peut gagner
-    node.trait = ROND;    // C'est au tour de l'ordinateur de jouer
-    int dernierePosition = 0;  // Supposons que la dernière position jouée est 2
+    node.g[0][2] = -1;    
+    node.trait = ROND;    
+    int dernierePosition = 0;  // Supposons que la dernière position jouée est 0
 
     // Définir une profondeur de recherche
-    int depth = 3;  // Profondeur suffisante pour que Minimax trouve le coup gagnant
+    int depth = 3;
 
     // Définir le trait de l'ordinateur
-    int traitOrdi = ROND;  // Supposons que ROND est l'ordinateur
+    int traitOrdi = ROND;  
 
     // Convertir super_morpion en childNode
     childNode testNode;
-    testNode.sm = node;  // Copiez l'état du jeu
-    testNode.dernierePosition = dernierePosition;  // Définissez la dernière position
+    testNode.sm = node;  
+    testNode.dernierePosition = dernierePosition;  
 
     // Appeler Minimax avec la structure childNode, la profondeur, et le trait de l'ordinateur
     int bestValue = minimax(testNode, depth, traitOrdi);
@@ -52,7 +50,7 @@ void test_minimax() {
 
 
 void setupWinningNode(super_morpion *node) {
-    // Réinitialiser le jeu
+    // Initialiser le jeu
     *node = newSuperMorpion();
 
     // Configurer manuellement trois grilles gagnantes pour ROND
@@ -71,7 +69,6 @@ void setupWinningNode(super_morpion *node) {
     node->g[2][1] = ROND;
     node->g[2][2] = ROND;
 
-    // Définissez le trait au joueur opposé pour simuler un jeu après un coup gagnant
     node->trait = CROIX;
 }
 
@@ -87,12 +84,11 @@ void setupFilledNode(super_morpion *node) {
         }
     }
 
-    // Assurez-vous que ROND a 5 marqueurs ou plus en les plaçant manuellement
     node->g[1][0] = ROND;
     node->g[1][2] = ROND;
     node->g[2][0] = ROND;
     node->g[2][2] = ROND;
-    node->g[2][4] = ROND;  // Ajout d'un cinquième marqueur ROND
+    node->g[2][4] = ROND; 
 }
 
 void setupOngoingNode(super_morpion *node) {
@@ -101,7 +97,7 @@ void setupOngoingNode(super_morpion *node) {
     // Configurer un jeu en cours avec quelques cases remplies
     node->g[0][0] = ROND;
     node->g[0][1] = CROIX;
-    // Laisser des cases vides pour simuler un jeu en cours
+
 }
 
 
@@ -155,14 +151,14 @@ void test_nodeChildren() {
     // Test 1: Jeu n'a pas commencé (dernierePosition = -1)
     {
         super_morpion node = newSuperMorpion();
-        node.trait = CROIX; // C'est au tour de CROIX de jouer
+        node.trait = CROIX; 
         int dernierePositionAdversaire = -1; // Aucun coup joué précédemment
 
         int childrenCount;
         childNode *children = nodeChildren(&node, dernierePositionAdversaire, &childrenCount);
 
         // Dans ce scénario, tous les coups sont possibles
-        int expectedChildrenCount = 81 - 0; // Ajuster en fonction de la configuration du jeu
+        int expectedChildrenCount = 81 - 0;
 
         if (childrenCount == expectedChildrenCount) {
             printf("Test nodeChildren (jeu n'a pas commencé): PASSED\n");
@@ -178,15 +174,15 @@ void test_nodeChildren() {
     // Test 2: Jouer dans une grille spécifique
     {
         super_morpion node = newSuperMorpion();
-        node.g[4][0] = ROND;  // Supposons que la grille 5 a déjà quelques coups joués
-        node.trait = CROIX;   // C'est au tour de CROIX de jouer
+        node.g[4][0] = ROND;  
+        node.trait = CROIX; 
         int dernierePositionAdversaire = 40;  // Le dernier coup joué par ROND était dans la grille 5
 
         int childrenCount;
         childNode *children = nodeChildren(&node, dernierePositionAdversaire, &childrenCount);
 
         // Ici, nous nous attendons à ce que tous les coups valides dans la grille 5 soient comptés
-        int expectedChildrenCount = 9 - 1; // Ajuster en fonction de la configuration du jeu
+        int expectedChildrenCount = 9 - 1;
 
         if (childrenCount == expectedChildrenCount) {
             printf("Test nodeChildren (jouer dans une grille spécifique): PASSED\n");
@@ -205,15 +201,15 @@ void test_nodeChildren() {
         
         // Configurer une grille comme déjà gagnée
         node.g[3][0] = node.g[3][1] = node.g[3][2] = CROIX;
-        node.trait = ROND;   // C'est au tour de ROND de jouer
+        node.trait = ROND;
         int dernierePositionAdversaire = 30;  // Le dernier coup joué par CROIX était dans la grille 4
 
         int childrenCount;
         childNode *children = nodeChildren(&node, dernierePositionAdversaire, &childrenCount);
 
         // Dans ce cas, le joueur ne peut pas jouer dans la grille 4
-        int expectedChildrenCount = 81 - 9; // Ajuster en fonction de la configuration du jeu
-
+        int expectedChildrenCount = 81 - 9; 
+        
         if (childrenCount == expectedChildrenCount) {
             printf("Test nodeChildren (grille déjà gagnée): PASSED\n");
             tests_passed++;
@@ -233,69 +229,3 @@ void test_nodeChildren() {
     }
 }
 
-
-/*void test_obtenirMeilleurCoup() {
-    printf("Début du test de obtenirMeilleurCoup");
-    // Créer un état de jeu spécifique pour le test
-    super_morpion node = newSuperMorpion();
-
-    // Configurer un scénario de jeu où l'ordinateur peut prendre une décision avantageuse
-    node.g[0][0] = ROND;  // Supposons que ROND est l'ordinateur
-    node.g[0][1] = ROND;    // Case vide où l'ordinateur peut gagner
-    node.trait = ROND;    // C'est au tour de l'ordinateur de jouer
-    int dernierePositionAdversaire = 0;  // Supposons que la dernière position jouée est 4
-
-    // Définir une profondeur de recherche
-    int depth = 3;  // Profondeur suffisante pour que Minimax trouve le meilleur coup
-
-    // Définir le trait de l'ordinateur
-    int traitOrdi = ROND;  // Supposons que ROND est l'ordinateur
-
-    // Appeler obtenirMeilleurCoup avec l'état de jeu spécifique, la profondeur et la dernière position
-    childNode meilleurCoup = obtenirMeilleurCoup(&node, depth, traitOrdi, dernierePositionAdversaire);
-
-    // Afficher le super morpion après le meilleur coup trouvé
-    printf("Meilleur coup trouvé :\n");
-    showSuperMorpion(&meilleurCoup.sm);
-
-    // Définir l'index de la position attendue pour le meilleur coup
-    int expectedBestMoveIndex = 2;  // Ajustez en fonction de la logique de votre jeu
-
-    // Vérifier si le meilleur coup renvoyé correspond au meilleur coup attendu
-    if (meilleurCoup.sm.g[0][expectedBestMoveIndex] == traitOrdi) {
-        printf("Test obtenirMeilleurCoup: PASSED\n");
-    } else {
-        printf("Test obtenirMeilleurCoup: FAILED\n");
-        printf("Expected best move at position %d, but got different position\n", expectedBestMoveIndex);
-    }
-}*/
-
-
-void test_getBestMove_grilleGagnee() {
-    printf("Test de getBestMove dans une situation où l'ordinateur doit jouer dans une grille déjà gagnée\n");
-
-    // Création d'un état de jeu spécifique
-    super_morpion node = newSuperMorpion();
-    node.trait = CROIX; // L'ordinateur joue avec les croix
-
-    // Configuration d'une grille comme étant déjà gagnée par CROIX
-    for (int i = 0; i < 3; i++) {
-        node.g[3][i] = CROIX; // Gagner la grille 4
-    }
-
-    int dernierePositionAdversaire = 3 * 9; // La dernière position jouée est dans la grille 4
-
-    int depth = 3; // Profondeur de recherche pour l'algorithme Minimax
-    int traitOrdi = CROIX; // L'ordinateur joue les croix
-
-    // Appel à getBestMove
-    childNode meilleurCoup = getBestMove(&node, depth, traitOrdi, dernierePositionAdversaire);
-
-    // Afficher le coup suggéré par l'ordinateur
-    printf("Meilleur coup suggéré : Position %d, Grille %d\n", meilleurCoup.dernierePosition, meilleurCoup.dernierePosition / 9 + 1);
-
-    // Afficher la grille après avoir joué le meilleur coup
-    playSuperMorpion(&node, meilleurCoup.dernierePosition);
-    printf("État du jeu après le meilleur coup de l'ordinateur :\n");
-    showSuperMorpion(&node);
-}
