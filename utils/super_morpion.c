@@ -530,13 +530,13 @@ void showSuperMorpion(super_morpion *sm) {
     }
 }
 
-super_morpion toSuperMorpion(char * FEN, char* trait){
+super_morpion toSuperMorpion(char * FEN){
 	super_morpion sm = newSuperMorpion();
 	int i = 0;
 	int grille = 0;
 	int pos = 0;
 	
-	while(FEN[i] != '\0'){
+	while(FEN[i] != ' '){
 		if(FEN[i] == 'x'){
 			sm.g[pos/9][pos%9] = CROIX;
 			pos++;
@@ -563,9 +563,9 @@ super_morpion toSuperMorpion(char * FEN, char* trait){
 			pos+= 9;
 		}}
 		
-		if(FEN[i] <= 56) {
+		if(FEN[i] <= 9+48) {
 			pos += FEN[i]-48;
-			//printf("Position = %d \n", decalage);
+			//printf("Position = %d \n", pos);
 		}
 		//printf("%c : Position = %d \n", play[i],pos);
 		//printf("Tableau = %d \n", pos/8);
@@ -573,10 +573,10 @@ super_morpion toSuperMorpion(char * FEN, char* trait){
 		i++;
 	}
 	
-	if(trait[0] == 'o'){
+	if(FEN[i+4] == 'o'){
 		sm.trait = ROND;
 	}
-	if(trait[0] == 'x'){
+	if(FEN[i+4] == 'x'){
 		sm.trait = CROIX;
 	}
 	
