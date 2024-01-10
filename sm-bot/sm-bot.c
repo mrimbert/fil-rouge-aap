@@ -15,8 +15,8 @@ int main(int argc, char* argv[]){
 
     	
 	super_morpion sm1 = toSuperMorpion(FEN);
-	showSuperMorpion(&sm1);
-	generateSuperMorpionImage(sm1);
+	//showSuperMorpion(&sm1);
+	//generateSuperMorpionImage(sm1);
 	//printf("Trait : %d \n", sm1.trait);
 
 	childNode node;
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]){
 	int lastMove = (FEN[i+1]-48)*10+FEN[i+2]-48;
 	//printf("Last Move : %d \n", lastMove);
 	node.dernierePosition = invConvCoup(lastMove);
-	printf("Le dernier coup est : %d \n", node.dernierePosition);
+	//printf("Le dernier coup est : %d \n", node.dernierePosition);
 	//showSuperMorpion(&sm1);
 	
 	int profondeur = 5;
@@ -44,8 +44,8 @@ int main(int argc, char* argv[]){
 	result = getBestMove(&sm1,profondeur,1,node.dernierePosition);
 	//showSuperMorpion(&result.sm);
 	int pos = convCoup(result.dernierePosition);
-	printf("%d \n",result.dernierePosition);
-	printf("%d \n",pos);
+	//printf("%d \n",result.dernierePosition);
+	printf("%d",pos);
 	
 	return pos;
 }

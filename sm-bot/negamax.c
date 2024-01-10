@@ -188,7 +188,7 @@ int convCoup(int coup){
 }
 
 int invConvCoup(const int coup){
-	int grille = (coup/10-1)*9;
-	int pos = coup%10+3;
-	return grille+pos;
+	int grille = (coup/10)-1;
+	int pos = (coup%10)-1;
+	return grille*9+pos;
 }
