@@ -44,7 +44,6 @@ childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernier
     free(children);
 
     if(getenv("DEBUG") != NULL) printf("Meilleur coup trouvé: position=%d\n", meilleurCoup.dernierePosition);
-    showSuperMorpion(&meilleurCoup.sm);
     return meilleurCoup;
 }
 
