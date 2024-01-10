@@ -1,8 +1,8 @@
 CIBLE=$(REP).exe
-CFLAGS=-Wall -Wno-format-overflow -Wno-format-truncation
 
 
-all: tttree sm-refresh.exe sm-bot.exe
+
+all: tttree.exe sm-refresh.exe sm-bot.exe
 	@echo "Le programme tttree a été produit dans le répertoire $(REP)"
 	@echo "Le programme sm-refresh a été produit dans le répertoire $(REP)"
 
@@ -21,10 +21,13 @@ clean:
 	
 	@echo "Nettoyage de test"
 	@rm -rf test.exe
+	
+	@echo "Nettoyage de sm-bot"
+	@rm -rf sm-bot.exe
 
-tttree: tttree.c ./utils/morpion.c
+tttree.exe: ./tttree/tttree.c ./utils/morpion.c
 	@echo "Le programme tttree.exe a été produit"
-	gcc $(CFLAGS) tttree.c ./utils/morpion.c -o tttree.exe
+	gcc -Wall -o $@ $^
 
 sm-refresh.exe: ./sm-refresh/sm-refresh.o ./sm-refresh/minimax.o ./utils/super_morpion.o ./utils/morpion.o
 	@echo "Le programme sm-refresh.exe a été produit"
