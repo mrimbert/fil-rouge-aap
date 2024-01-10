@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
 	int secondsleft = atoi(argv[2]);
 	
 	char* FEN = argv[1];
-	printf("Lu : %s \n", FEN);
+	//printf("Lu : %s \n", FEN);
 
     	
 	super_morpion sm1 = toSuperMorpion(FEN);
@@ -21,12 +21,12 @@ int main(int argc, char* argv[]){
 
 	childNode node;
 	node.sm  = sm1;
-	int i;
+	int i = 0;
 	while(FEN[i] != ' ') i++;
 	int lastMove = (FEN[i+1]-48)*10+FEN[i+2]-48;
 	//printf("Last Move : %d \n", lastMove);
 	node.dernierePosition = invConvCoup(lastMove);
-	//printf("Le dernier coup est : %d \n", node.dernierePosition);
+	printf("Le dernier coup est : %d \n", node.dernierePosition);
 	//showSuperMorpion(&sm1);
 	
 	int profondeur = 5;
