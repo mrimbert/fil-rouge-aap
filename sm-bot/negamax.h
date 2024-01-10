@@ -13,3 +13,4 @@ int isTerminal(super_morpion *node);
 childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernierePosition);
 
 int convCoup(int coup);
+int invConvCoup(const int coup);

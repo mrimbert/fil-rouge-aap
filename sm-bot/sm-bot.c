@@ -22,24 +22,26 @@ int main(int argc, char* argv[]){
 
 	childNode node;
 	node.sm  = sm1;
-	node.dernierePosition = atoi(lastMove);
-	showSuperMorpion(&sm1);
+	node.dernierePosition = invConvCoup(atoi(lastMove));
+	//printf("Le dernier coup est : %d \n", node.dernierePosition);
+	//showSuperMorpion(&sm1);
 	
 	int profondeur;
 	
 	
-	if(secondsleft >= 120) profondeur = 15;
-	if(secondsleft >= 60 && secondsleft < 120 ) profondeur = 10;
+	if(secondsleft >= 120) profondeur = 5;
+	if(secondsleft >= 60 && secondsleft < 120 ) profondeur = 5;
 	if(secondsleft <= 30) profondeur = 5;
-	if(secondsleft < 15) profondeur = 3;
+	if(secondsleft < 15) profondeur = 5;
 	
 	//printf("Profondeur choisie : %d \n", profondeur);
 	
 	childNode result;
 	result = getBestMove(&sm1,profondeur,1,node.dernierePosition);
-	showSuperMorpion(&result.sm);
+	//showSuperMorpion(&result.sm);
 	int pos = convCoup(result.dernierePosition);
-	printf("Le coup joué est : %d \n",pos);
-	return 0;
+	printf("%d \n",result.dernierePosition);
+	printf("%d \n",pos);
+	return pos;
 }
 
