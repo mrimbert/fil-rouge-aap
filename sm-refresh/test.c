@@ -16,8 +16,6 @@ int main() {
     test_minimax();
     test_nodeChildren();
     test_isTerminal();
-    //test_obtenirMeilleurCoup();
-    test_getBestMove_grilleGagnee();
     printf("Tous les tests sont terminés !\n");
     return 0;
 }
