@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// Définir les fonctions max et min
+// Définition des fonctions max et min
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
@@ -15,8 +15,8 @@ childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernier
    if(getenv("DEBUG") != NULL) printf("Recherche du meilleur coup pour la position %d\n", dernierePosition);
     
     int meilleurScore = (traitOrdi == node->trait) ? NEG_INFINITY : INFINITY;
-    childNode meilleurCoup; // Déclarer une variable pour stocker le meilleur coup
-    memset(&meilleurCoup, 0, sizeof(meilleurCoup)); // Initialiser meilleurCoup
+    childNode meilleurCoup;
+    memset(&meilleurCoup, 0, sizeof(meilleurCoup)); // Initialisation du meilleurCoup
 
     int childrenCount;
     childNode *children = nodeChildren(node, dernierePosition, &childrenCount); // Générer les enfants du noeud actuel
@@ -28,32 +28,42 @@ childNode getBestMove(super_morpion *node, int depth, int traitOrdi, int dernier
     }
 
     for (int i = 0; i < childrenCount; i++) {
+    // Calculer le score actuel en utilisant la fonction minimax
         int currentScore = minimax(children[i], depth - 1, traitOrdi);
+    
+        // Vérifier si le score actuel est meilleur que le meilleur score actuel
         if ((traitOrdi == node->trait && currentScore > meilleurScore) ||
             (traitOrdi != node->trait && currentScore < meilleurScore)) {
+            // Mettre à jour le meilleur score et le meilleur coup si nécessaire
             meilleurScore = currentScore;
             meilleurCoup = children[i];
         }
     }
 
+    // Libérer la mémoire allouée pour les enfants
     free(children);
+
     if(getenv("DEBUG") != NULL) printf("Meilleur coup trouvé: position=%d\n", meilleurCoup.dernierePosition);
+    showSuperMorpion(&meilleurCoup.sm);
     return meilleurCoup;
 }
 
 
 
 int minimax(childNode node, int depth, int traitOrdi) {
+
     if(getenv("DEBUG") != NULL) printf("Entrée dans minimax: depth=%d, traitOrdi=%d\n", depth, traitOrdi);
     
+    // Vérifier si la profondeur maximale est atteinte ou si la position est terminale
     if (depth == 0 || isTerminal(&node.sm)) {
-        return evaluation_partie(node.sm, node.dernierePosition);  // Utilisez la dernière position stockée dans node
+        return evaluation_partie(node.sm, node.dernierePosition);
     }
 
     int value;
     int childrenCount;
-    childNode *children = nodeChildren(&node.sm, node.dernierePosition, &childrenCount); // Passez la dernière position à nodeChildren
-
+    childNode *children = nodeChildren(&node.sm, node.dernierePosition, &childrenCount); // Générer les enfants du nœud actuel
+    
+    // Vérifier si la génération des enfants a échoué
     if (children == NULL) {
         fprintf(stderr, "Erreur pour 'children' dans minimax.\n");
         return -1;
@@ -62,37 +72,36 @@ int minimax(childNode node, int depth, int traitOrdi) {
     if (traitOrdi == node.sm.trait) { // Maximiseur
         value = NEG_INFINITY;
         for (int i = 0; i < childrenCount; i++) {
-            // Passez la dernière position jouée de l'enfant aux appels récursifs
+            // Appel récursif de minimax pour chaque enfant en passant la dernière position jouée
             int childScore = minimax(children[i], depth - 1, traitOrdi);
             value = max(value, childScore);
         }
     } else { // Minimiseur
         value = INFINITY;
         for (int i = 0; i < childrenCount; i++) {
-            // Passez la dernière position jouée de l'enfant aux appels récursifs
+            // Appel récursif de minimax pour chaque enfant en passant la dernière position jouée
             int childScore = minimax(children[i], depth - 1, traitOrdi);
             value = min(value, childScore);
         }
     }
 
     free(children); // Libérer la mémoire allouée pour les enfants
+    
     if(getenv("DEBUG") != NULL) printf("Sortie de minimax: valeur=%d\n", value);
-    return value;
+    return value; 
 }
-
 
 
 
 // Vérifie si une grille spécifique dans un super_morpion est gagnée ou complète
 int isGridWonOrComplete(super_morpion *node, int grid) {
     int res = 0;
-    morpion m = newMorpion(); // Créez une instance de morpion
-    memcpy(m.g, node->g[grid], sizeof(m.g)); // Copiez la grille spécifique dans le morpion
+    morpion m = newMorpion();
+    memcpy(m.g, node->g[grid], sizeof(m.g)); // Copier la grille spécifique dans le morpion
     m.trait = node->trait; // On teste la victoire pour les deux joueurs
     res += isWin(m);
     m.trait = 1 - node->trait;
     res += isWin(m);
-    //printf("Grille %d est gagnée: %d, est complète: %d\n", grid, res, isOver(m));
 
     return res || isOver(m); // Vérifiez si la grille est gagnée ou complète
 }
