@@ -130,7 +130,7 @@ void generateSuperMorpionImage(super_morpion sm) {
                 "style=\"rounded\" bgcolor=\"black\"> \n");
   } else {
   fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" "
-                "style=\"rounded\" bgcolor=\"white\"> \n"); }
+                "style=\"rounded\" bgcolor=\"black\"> \n"); }
   fprintf(file, "<TR> \n");
   for (i = 0; i < 9; i++) {
   memcpy(tempMorpion.g, sm.g[i], sizeof(tempMorpion.g));
@@ -198,7 +198,7 @@ void generateSuperMorpionImage(super_morpion sm) {
                     "style=\"rounded\" bgcolor=\"black\"> \n");
       } else {
       fprintf(file, "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\" "
-                    "style=\"rounded\" bgcolor=\"white\"> \n");}
+                    "style=\"rounded\" bgcolor=\"black\"> \n");}
       fprintf(file, "<TR> \n");
     }
   }
@@ -343,7 +343,7 @@ int evaluation_grille(morpion m) {
         evaluation -= 9; }
  
 //Si la grille comporte une victoire, on ajoute ou soustrait ses points en fonction de qui l'emporte
-    evaluation += isWin(m) * 12;
+    evaluation += isWin(m) * 18;
     return evaluation;
 }
 
