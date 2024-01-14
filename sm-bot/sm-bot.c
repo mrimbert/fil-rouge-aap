@@ -31,12 +31,12 @@ int main(int argc, char* argv[]){
 	
 	int profondeur = 5;
 	
-	/*
-	if(secondsleft >= 120) profondeur = 5;
-	if(secondsleft >= 60 && secondsleft < 120 ) profondeur = 5;
+	
+	if(secondsleft >= 120) profondeur = 7;
+	if(secondsleft >= 60 && secondsleft < 120 ) profondeur = 6;
 	if(secondsleft <= 30) profondeur = 5;
-	if(secondsleft < 15) profondeur = 5;
-	*/
+	if(secondsleft < 15) profondeur = 3;
+	
 	
 	//printf("Profondeur choisie : %d \n", profondeur);
 	
